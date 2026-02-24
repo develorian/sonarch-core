@@ -1,0 +1,15 @@
+{
+    "name": "SONARCH Network",
+    "short_name": "SONARCH",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0a0a12",
+    "theme_color": "#00f2ff",
+    "icons": [
+        {
+            "src": "https://via.placeholder.com/192",
+            "sizes": "192x192",
+            "type": "image/png"
+        }
+    ]
+}
