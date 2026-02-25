@@ -1,69 +1,106 @@
 // src/core/engine.js
-
-// 1. IMPORTACIÓN SÍNCRONA CRUDA (Evita el error de MIME type de Vite)
 import cssText from '../css/global.css?raw';
 
-// 2. CREAMOS LA HOJA MAESTRA COMPARTIDA
+// 🛡️ MOTOR CSS (Constructable Stylesheets - Rendimiento Extremo)
 const globalSheet = new CSSStyleSheet();
 globalSheet.replaceSync(cssText);
+document.adoptedStyleSheets = [globalSheet]; // Aplica al documento general
 
-// 3. INYECTAMOS AL DOCUMENTO GLOBAL (Fondo negro y variables :root)
-document.adoptedStyleSheets = [globalSheet];
+/**
+ * @template T
+ * @typedef {Object} Signal
+ * @property {T} value
+ * @property {function(function(T): void): function(): void} subscribe
+ */
 
-// Sistema de Señales
+// ==========================================================================
+// 1. MOTOR REACTIVO (Memoria Grano Fino O(1))
+// ==========================================================================
+
+/**
+ * Crea un nodo de memoria reactiva.
+ * @template T
+ * @param {T} initialValue
+ * @returns {Signal<T>}
+ */
 export function createSignal(initialValue) {
     let value = initialValue;
-    const listeners = new Set();
+    /** @type {Set<function(T): void>} */
+    const subscribers = new Set();
+    
     return {
         get value() { return value; },
-        set value(newVal) { value = newVal; listeners.forEach(fn => fn(value)); },
-        subscribe: (fn) => listeners.add(fn)
+        set value(newValue) {
+            if (value === newValue) return;
+            value = newValue;
+            subscribers.forEach(fn => fn(value));
+        },
+        subscribe(fn) {
+            subscribers.add(fn);
+            fn(value);
+            return () => subscribers.delete(fn); // Detonador de limpieza
+        }
     };
 }
 
-// Tema Global
-const getInitialTheme = () => localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-export const themeSignal = createSignal(getInitialTheme());
+/** @type {Signal<string>} */
+export const themeSignal = createSignal('dark');
+themeSignal.subscribe(theme => document.documentElement.setAttribute('data-theme', String(theme)));
 
-themeSignal.subscribe((theme) => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-});
 
-// Creador de Componentes Nativos
-export function defineComponent(tagName, renderFn) {
-    if (customElements.get(tagName)) return; 
-    
+// ==========================================================================
+// 2. FÁBRICA DE COMPONENTES SOBERANOS (Shadow DOM)
+// ==========================================================================
+
+/**
+ * @typedef {Object} ComponentConfig
+ * @property {string} template
+ * @property {function(ShadowRoot): (function(): void | void)} [setup]
+ */
+
+/**
+ * Registra un Web Component de grado militar.
+ * @param {string} tagName
+ * @param {function(Object<string, string>): ComponentConfig} componentFn
+ */
+export function defineComponent(tagName, componentFn) {
+    if (customElements.get(tagName)) return;
+
     customElements.define(tagName, class extends HTMLElement {
         constructor() {
             super();
             this.attachShadow({ mode: 'open' });
-            
-            // MAGIA: Inyectamos la hoja maestra sin hacer peticiones de red
-            this.shadowRoot.adoptedStyleSheets = [globalSheet];
+            /** @type {function(): void | null} */
+            this._cleanup = null;
         }
-        
-        connectedCallback() { this.mount(); }
-        
-        get attbrs() {
-            const attrs = {};
-            for (let attr of this.attributes) {
-                const key = attr.name.startsWith('attbr-') ? attr.name.slice(6) : attr.name;
-                attrs[key] = attr.value;
+
+        connectedCallback() {
+            /** @type {Object<string, string>} */
+            const attbr = {};
+            Array.from(this.attributes).forEach(attr => {
+                if (attr.name.startsWith('attbr-')) {
+                    attbr[attr.name.replace('attbr-', '')] = attr.value;
+                }
+            });
+
+            const { template, setup } = componentFn(attbr);
+
+            if (this.shadowRoot) {
+                // 🚀 INYECCIÓN CSS NATIVA Y SOBERANA
+                this.shadowRoot.adoptedStyleSheets = [globalSheet];
+                this.shadowRoot.innerHTML = template;
             }
-            return attrs;
+
+            if (setup && this.shadowRoot) {
+                this._cleanup = setup(this.shadowRoot) || null; 
+            }
         }
-        
-        mount() {
-            const { template, setup } = renderFn(this.attbrs);
-            
-            // SIN @import. Solo forzamos el tamaño correcto.
-            this.shadowRoot.innerHTML = `
-                <style>:host { display: block; width: 100%; height: 100%; }</style>
-                ${template}
-            `;
-            
-            if (setup) setup(this.shadowRoot);
+
+        disconnectedCallback() {
+            if (typeof this._cleanup === 'function') {
+                this._cleanup();
+            }
+            this._cleanup = null;
         }
     });
 }

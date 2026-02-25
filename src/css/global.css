@@ -1,198 +1,239 @@
+/* ==========================================================================
+   SONARCH UI CORE - THE DEVELORIAN MANIFEST
+   ========================================================================== */
+
 :root {
-    --bg-surface: #f0f4f8;
-    --bg-panel: #ffffff;
-    --text-primary: #1a1a2e;
-    --text-secondary: #6e6e80;
-    --color-accent-cyan: #00f2ff;
-    --color-accent-blue: #4facfe;
-    --glass-bg: rgba(255, 255, 255, 0.6);
-    --glass-border: rgba(255, 255, 255, 0.3);
-    --shadow-color: rgba(0, 0, 0, 0.05);
+    /* 1. PALETA BASE (Diseño Fluido y Matemático) */
+    --color-cyan: #00f2ff;
+    --color-blue: #4facfe;
+    --color-purple: #8b5cf6;
+    
+    /* Variables que cambiarán según el tema */
+    --bg-base: #f8f9fa; /* Fondo principal claro */
+    --bg-surface: #ffffff; /* Fondo de tarjetas claro */
+    --text-main: #1e293b; /* Texto principal oscuro */
+    --text-mut: #64748b; /* Texto secundario gris */
+    
+    /* Degradados Principales (Extraídos de tus imágenes) */
+    --grad-primary: linear-gradient(135deg, var(--color-purple), var(--color-blue));
+    
+    /* 2. ESCALA DE TAMAÑOS (tiny, small, medium, large, extra-large) 
+       Usamos clamp() para que el tamaño sea fluido entre móviles y 4K */
+    --sz-tn: clamp(0.25rem, 1vw, 0.5rem);   /* Tiny */
+    --sz-sm: clamp(0.5rem, 2vw, 0.75rem);   /* Small */
+    --sz-md: clamp(1rem, 3vw, 1.25rem);     /* Medium (Base) */
+    --sz-lg: clamp(1.5rem, 4vw, 2rem);      /* Large */
+    --sz-xl: clamp(2rem, 5vw, 3rem);        /* X-Large */
+
+    /* 3. PUNTOS DE QUIEBRE (Breakpoints para 4 dispositivos) */
+    --bp-mob: 480px;   /* Móvil */
+    --bp-tab: 768px;   /* Tablet */
+    --bp-lap: 1024px;  /* Laptop */
+    --bp-desk: 1440px; /* Escritorio 4K */
+
     font-family: 'Inter', system-ui, sans-serif;
+    color-scheme: light dark;
 }
 
+/* ==========================================================================
+   TEMA OSCURO (Reescritura de variables)
+   ========================================================================== */
 [data-theme="dark"] {
-    --bg-surface: #0a0a12;
-    --bg-panel: #161622;
-    --text-primary: #f0f4f8;
-    --text-secondary: #a0a0b0;
-    --glass-bg: rgba(0, 0, 0, 0.6);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --shadow-color: rgba(0, 242, 255, 0.1);
+    --bg-base: #0a0a12;
+    --bg-surface: #13161c;
+    --text-main: #f0f4f8;
+    --text-mut: #94a3b8;
+    --grad-primary: linear-gradient(135deg, var(--color-blue), var(--color-cyan));
 }
 
-body {
-    background-color: var(--bg-surface);
-    color: var(--text-primary);
-    margin: 0;
-    min-height: 100vh;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-/* === UTILITIES TAILWIND-LIKE === */
-*,
-*::before,
-*::after {
+/* ==========================================================================
+   ESTRUCTURA BASE Y FONDOS ANIMADOS
+   ========================================================================== */
+*, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-.flex {
-    display: flex;
+body {
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    min-height: 100dvh; /* dvh: Dynamic Viewport Height (Evita cortes en móviles) */
+    position: relative;
+    overflow-x: hidden;
+    transition: background-color 0.4s ease, color 0.4s ease;
+    
+    /* Tipografía HD */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
 }
 
-.col {
-    flex-direction: column;
+/* 🌟 MAGIA: Fondo de Hexágonos y Hilos Láser usando Máscaras CSS puras */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    /* Usamos el color del texto muy transparente para dibujar los hexágonos */
+    background-color: color-mix(in srgb, var(--text-main) 5%, transparent);
+    /* Inyectamos el SVG del hexágono como máscara */
+    mask-image: url("data:image/svg+xml,%3Csvg width='60' height='103.9' viewBox='0 0 60 103.9' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill-opacity='0' stroke='%23000' stroke-width='1'/%3E%3Cpath d='M30 103.9l25.98-15v-30L30 43.9l-25.98 15v30z' fill-opacity='0' stroke='%23000' stroke-width='1'/%3E%3C/svg%3E");
+    mask-size: 60px 103.9px;
+    pointer-events: none;
 }
 
-.items-center {
-    align-items: center;
+/* 🌟 MAGIA: Haces de luz y escáner láser flotante */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: 
+        /* Orbe de luz superior izquierda */
+        radial-gradient(circle at 15% 30%, color-mix(in srgb, var(--color-purple) 10%, transparent) 0%, transparent 40%),
+        /* Orbe de luz inferior derecha */
+        radial-gradient(circle at 85% 70%, color-mix(in srgb, var(--color-cyan) 10%, transparent) 0%, transparent 40%);
+    /* Animación del escáner de red P2P */
+    animation: pulse-network 10s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.justify-between {
-    justify-content: space-between;
+@keyframes pulse-network {
+    0% { opacity: 0.5; transform: scale(1); }
+    100% { opacity: 1; transform: scale(1.05); }
 }
 
-.justify-center {
-    justify-content: center;
+/* ==========================================================================
+   SISTEMA DE DISEÑO (UTILITIES TIPO TAILWIND)
+   ========================================================================== */
+
+/* --- Layout Flex y Grid --- */
+.fx { display: flex; }
+.fx-col { flex-direction: column; }
+.items-ctr { align-items: center; }
+.just-ctr { justify-content: center; }
+.just-btw { justify-content: space-between; }
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+
+/* --- Espaciados Dinámicos (Gaps) --- */
+.gap-tn { gap: var(--sz-tn); }
+.gap-sm { gap: var(--sz-sm); }
+.gap-md { gap: var(--sz-md); }
+.gap-lg { gap: var(--sz-lg); }
+.gap-xl { gap: var(--sz-xl); }
+
+/* --- Padding y Margen (Propiedades Lógicas) --- */
+.p-tn { padding: var(--sz-tn); }
+.p-sm { padding: var(--sz-sm); }
+.p-md { padding: var(--sz-md); }
+.p-lg { padding: var(--sz-lg); }
+.p-xl { padding: var(--sz-xl); }
+
+/* --- Tipografía Inteligente --- */
+.txt-tn { font-size: clamp(0.65rem, 0.8vw, 0.75rem); }
+.txt-sm { font-size: clamp(0.75rem, 1vw, 0.875rem); }
+.txt-md { font-size: clamp(0.875rem, 1vw + 0.5rem, 1rem); text-wrap: pretty; }
+.txt-lg { font-size: clamp(1.125rem, 2vw + 0.5rem, 1.25rem); text-wrap: balance; }
+.txt-xl { font-size: clamp(2rem, 5vw, 4rem); text-wrap: balance; line-height: 1.1; font-weight: 800; letter-spacing: -0.02em; }
+
+.fw-bold { font-weight: 700; }
+.txt-ctr { text-align: center; }
+.tc-main { color: var(--text-main); }
+.tc-mut { color: var(--text-mut); }
+.tc-grad { 
+    background: var(--grad-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.gap-6 {
-    gap: 1.5rem;
+/* ==========================================================================
+   COMPONENTES UI (GLASSMORPHISM Y ALERTAS)
+   ========================================================================== */
+
+/* 🌟 GLASSMORPHISM SOBERANO (Con anidación y color-mix) */
+.gls-panel {
+    background: color-mix(in srgb, var(--bg-surface) 60%, transparent);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid color-mix(in srgb, var(--text-main) 10%, transparent);
+    border-radius: var(--sz-md);
+    box-shadow: 0 8px 32px color-mix(in srgb, var(--text-main) 5%, transparent);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    
+    /* Efecto interactivo anidado */
+    &.hover-fx:hover {
+        transform: translateY(-2px);
+        border-color: color-mix(in srgb, var(--color-cyan) 30%, transparent);
+        box-shadow: 0 15px 40px color-mix(in srgb, var(--color-cyan) 10%, transparent);
+    }
 }
 
-.p-2 {
-    padding: 0.5rem;
-}
-
-.p-6 {
-    padding: 1.5rem;
-}
-
-.px-8 {
-    padding-left: 2rem;
-    padding-right: 2rem;
-}
-
-.py-4 {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-}
-
-.w-full {
-    width: 100%;
-}
-
-.min-h-screen {
-    min-height: 100vh;
-}
-
-.flex-1 {
-    flex: 1;
-}
-
-.text-xs {
-    font-size: 0.75rem;
-}
-
-.text-sm {
-    font-size: 0.875rem;
-}
-
-.text-base {
-    font-size: 1rem;
-}
-
-.text-xl {
-    font-size: 1.25rem;
-}
-
-.text-4xl {
-    font-size: clamp(2.5rem, 6vw, 4rem);
-}
-
-.font-bold {
-    font-weight: 700;
-}
-
-.tracking-widest {
-    letter-spacing: 0.1em;
-}
-
-.text-center {
-    text-align: center;
-}
-
-.text-dark {
-    color: var(--text-primary);
-}
-
-.text-light {
-    color: var(--text-secondary);
-}
-
-.text-accent {
-    color: var(--color-accent-cyan);
-}
-
-.bg-base {
-    background-color: var(--bg-surface);
-}
-
-.bg-glass {
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--glass-border);
-}
-
-.bg-gradient {
-    background: linear-gradient(90deg, var(--color-accent-blue), var(--color-accent-cyan));
+/* BOTONES GLOBALES */
+.btn-core {
+    background: var(--grad-primary);
+    color: #ffffff; /* El texto en botones oscuros siempre es blanco */
     border: none;
-}
-
-.rounded-full {
-    border-radius: 9999px;
-}
-
-.rounded-2xl {
-    border-radius: 1rem;
-}
-
-.shadow-md {
-    box-shadow: 0 4px 6px var(--shadow-color);
-}
-
-.shadow-lg {
-    box-shadow: 0 10px 25px var(--shadow-color);
-}
-
-.transition {
-    transition: all 0.3s ease;
-}
-
-.hover-up:hover {
-    transform: translateY(-1px);
-}
-
-.cursor-pointer {
+    padding: var(--sz-sm) var(--sz-lg);
+    border-radius: var(--sz-tn); /* Botones un poco más cuadrados y serios */
+    font-weight: 700;
     cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+        transform: scale(1.02);
+        filter: brightness(1.1);
+        box-shadow: 0 0 20px color-mix(in srgb, var(--color-cyan) 40%, transparent);
+    }
+    
+    &:active { transform: scale(0.98); }
 }
 
-.drop-shadow-cyan {
-    filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.5));
+/* 🌟 ALERTAS DEL SISTEMA (OK, CUIDADO, ERROR) */
+.alrt {
+    display: flex;
+    align-items: center;
+    gap: var(--sz-sm);
+    padding: var(--sz-sm) var(--sz-md);
+    border-radius: var(--sz-sm);
+    font-size: var(--sz-sm);
+    font-weight: 600;
+    border-left: 4px solid;
+    background: color-mix(in srgb, var(--bg-surface) 80%, transparent);
 }
 
-/* Animación SPA para el Router 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
+/* Anidación de estados de alerta */
+.alrt {
+    &.alrt-ok {
+        border-color: #10b981; /* Verde esmeralda */
+        color: #10b981;
+    }
+    &.alrt-warn {
+        border-color: #f59e0b; /* Amarillo ámbar */
+        color: #f59e0b;
+    }
+    &.alrt-err {
+        border-color: #ef4444; /* Rojo peligro */
+        color: #ef4444;
+    }
 }
-.animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
-*/
 
-/* Reset para que los Custom Elements usen Flexbox correctamente */
-sonarch-app, layout-base, view-home, sonarch-theme-toggle { 
+/* ==========================================================================
+   ANIMACIONES CORE
+   ========================================================================== */
+@keyframes fadeInSlide {
+    from { opacity: 0; transform: translateY(20px); filter: blur(5px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+.anim-fade { 
+    animation: fadeInSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+}
+
+/* ==========================================================================
+   RESETEO DE WEB COMPONENTS
+   ========================================================================== */
+sonarch-app, layout-base, view-home, view-enjambre, view-config, sonarch-theme-toggle { 
     display: block; 
     width: 100%; 
     height: 100%;

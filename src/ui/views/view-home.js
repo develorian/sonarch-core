@@ -25,11 +25,11 @@ const svgLogo = `
 defineComponent('view-home', () => {
     return {
         template: `
-            <div class="flex items-center justify-center w-full " style="height: 100%;">
-                <section class="flex col items-center text-center gap-6" style="max-width: 600px;">
+            <div class="fx items-ctr just-ctr w-full anim-fade" style="height: 100%;">
+                <section class="fx fx-col items-ctr txt-ctr gap-lg" style="max-width: 600px; margin: 0 auto;">
                     ${svgLogo}
-                    <h2 class="text-4xl font-bold text-dark">LA WEB SOBERANA</h2>
-                    <p class="text-base text-light">
+                    <h2 class="txt-xl fw-bold tc-main">LA WEB SOBERANA</h2>
+                    <p class="txt-md tc-mut">
                         Construyendo sistemas resilientes, post-cuánticos y sin intermediarios. 
                         El poder ha vuelto a los nodos.
                     </p>

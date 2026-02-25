@@ -33,34 +33,36 @@ const cyberBeeSvg = `
 </svg>
 `;
 
-defineComponent('sonarch-card', () => {
-    // Obtenemos la fecha actual
+defineComponent('sonarch-card', (attbr) => {
     const fecha = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
 
+    // 🌟 RECEPCIÓN DE ATRIBUTOS (Props): Leemos lo que nos manda el Padre
+    // Si no manda nada, usamos valores por defecto (Fallback)
+    const titulo = attbr.titulo || 'PULSO DEL ENJAMBRE';
+    const desc = attbr.desc || 'Nodos activos fortificando la red neuronal descentralizada. Presencia confirmada.';
+    const valor = attbr.valor || conexiones.value; 
+
     return {
-        template: `
-            <div class="bg-glass border-glass rounded-2xl p-8 flex col items-center text-center shadow-lg" style="width: 100%; max-width: 320px;">
+        template: /*html*/`
+            <div class="gls-panel p-xl fx fx-col items-ctr txt-ctr hover-fx" style="width: 100%; min-width: 250px;">
                 ${cyberBeeSvg}
-                
-                <h3 class="text-xl font-bold text-accent mt-4">PULSO DEL ENJAMBRE</h3>
-                <p class="text-sm text-light mt-2 mb-6">Nodos activos fortificando la red neuronal descentralizada. Presencia confirmada.</p>
-                
-                <div class="font-bold text-dark" style="font-size: 4rem; line-height: 1; text-shadow: 0 0 15px rgba(0,242,255,0.4);">
-                    <span id="nodo-display">${conexiones.value}</span>
+                <h3 class="txt-lg fw-bold tc-grad" style="margin-top: 1rem; text-transform: uppercase;">${titulo}</h3>
+                <p class="txt-sm tc-mut" style="margin-top: 0.5rem; margin-bottom: 1.5rem;">${desc}</p>
+                <div class="fw-bold tc-main" style="font-size: 4rem; line-height: 1; text-shadow: 0 0 20px color-mix(in srgb, var(--color-cyan) 40%, transparent);">
+                    <span ${!attbr.valor ? 'id="nodo-display"' : ''}>${valor}</span>
                 </div>
-                
-                <div class="text-xs text-light mt-6 opacity-70 tracking-widest uppercase">
+                <div class="txt-tn tc-mut" style="margin-top: 1.5rem; opacity: 0.7; letter-spacing: 0.1em; text-transform: uppercase;">
                     ${fecha}
                 </div>
             </div>
         `,
         setup: (shadowDOM) => {
-            const display = shadowDOM.querySelector('#nodo-display');
-
-            // Si el estado cambia mientras estamos en esta pantalla, se actualiza solo
-            conexiones.subscribe(val => {
-                display.textContent = val;
-            });
+            // SOLO nos suscribimos a la Señal Global si esta tarjeta es la del "Enjambre Principal"
+            // (Es decir, si no le pasaron un "attbr-valor" estático)
+            if (!attbr.valor) {
+                const display = shadowDOM.querySelector('#nodo-display');
+                if(display) conexiones.subscribe(val => display.textContent = String(val));
+            }
         }
     };
 });

@@ -1,4 +1,4 @@
-import { AdapterWeb3 } from '../../infraestructure/web3/adapterWeb3.js';
+import { AdapterWeb3 } from '../../infra/web3/adapterWeb3.js';
 
 export class IniciarEnjambreUseCase {
     constructor() { this.web3 = new AdapterWeb3(); }
