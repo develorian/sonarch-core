@@ -24,6 +24,10 @@ defineComponent('view-enjambre', () => {
                         <sonarch-card attbr-icono="red" attbr-titulo="LATENCIA DE RED" attbr-desc="Tiempo de respuesta P2P estimado." attbr-valor="12ms"></sonarch-card>
                     </div>
 
+                    <div class="txt-ctr mt-4" style="margin-top: 1rem;">
+                    <a href="/nodo/777" data-link class="txt-md fw-bold tc-cyan hover-fx">>> INSPECIONAR NODO 777 <<</a>
+                    </div>
+
                 </section>
             </div>
         `

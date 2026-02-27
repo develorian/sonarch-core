@@ -8,10 +8,12 @@ import "/src/ui/layouts/layout-base.js";
 import "/src/ui/components/sonarch-navbar.js";
 import "/src/ui/views/view-home.js";
 import "/src/ui/views/view-enjambre.js";
+import "/src/ui/views/view-nodo.js";
 
 // Si faltaba un punto y coma arriba, esto fallaba. Ahora está asegurado.
 Router.add('/', 'view-home');
 Router.add('/enjambre', 'view-enjambre');
+Router.add('/nodo/:id', 'view-nodo');
 
 Router.resolve();
 
