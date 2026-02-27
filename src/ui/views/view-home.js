@@ -24,7 +24,7 @@ const svgLogo = `
 
 defineComponent('view-home', () => {
     return {
-        template: `
+        template: /*html*/`
             <div class="fx items-ctr just-ctr w-full anim-fade" style="height: 100%;">
                 <section class="fx fx-col items-ctr txt-ctr gap-lg" style="max-width: 600px; margin: 0 auto;">
                     ${svgLogo}

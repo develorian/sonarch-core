@@ -25,6 +25,15 @@ defineComponent('view-enjambre', () => {
                     </div>
 
                     <div class="txt-ctr mt-4" style="margin-top: 1rem;">
+                    
+                    <!-- Agregamos par de combinaciones de búsquedas, para probar rutas con querys-->
+                    <div class="fx gap-md mt-4 just-ctr" style="margin-top: 2rem;">
+                        <a href="/busqueda?q=Criptografia" data-link class="btn-core" style="text-decoration: none;">Buscar Cripto</a>
+                        
+                        <a href="/busqueda?q=Redes+Mesh&filtro=Militares" data-link class="btn-core" style="text-decoration: none;">Buscar Redes (Con Filtro)</a>
+                    </div>
+
+                    <div class="txt-ctr mt-4" style="margin-top: 1rem;">
                     <a href="/nodo/777" data-link class="txt-md fw-bold tc-cyan hover-fx">>> INSPECIONAR NODO 777 <<</a>
                     </div>
 
