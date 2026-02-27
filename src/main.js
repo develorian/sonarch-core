@@ -1,17 +1,18 @@
-import { Router } from './core/router.js';
+// src/main.js
+import "/src/css/global.css";
 
-// Importar todos los nodos visuales
-import './ui/layouts/layout-base.js';
-import './ui/views/view-enjambre.js';
-import './ui/views/view-home.js';
-import './ui/components/sonarch-navbar.js';
+import { Router } from "/src/core/router.js";
 
-// Registrar Rutas
-Router.Route('/', 'layout-base', 'view-home');
-Router.Route('/enjambre', 'layout-base', 'view-enjambre');
+import "/src/ui/components/sonarch-app.js";
+import "/src/ui/layouts/layout-base.js";
+import "/src/ui/components/sonarch-navbar.js";
+import "/src/ui/views/view-home.js";
+import "/src/ui/views/view-enjambre.js";
 
+// Si faltaba un punto y coma arriba, esto fallaba. Ahora está asegurado.
+Router.add('/', 'view-home');
+Router.add('/enjambre', 'view-enjambre');
 
+Router.resolve();
 
-// Ejecutar directamente (Sin esperar a DOMContentLoaded)
-Router.render();
 console.log(">> SONARCH CORE: INICIADO CORRECTAMENTE");

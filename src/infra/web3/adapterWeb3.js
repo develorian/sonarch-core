@@ -1,8 +1,10 @@
 /** Adaptador Web3 Soberano (Puente hacia WASM) */
-export class AdapterWeb3 {
-    async connectSwarm(nodeId) {
-        console.log(`[AdapterWeb3] Conectando nodo ${nodeId}...`);
-        // Simulación: Aquí llamarías a tu binario Rust WASM
-        return new Promise(resolve => setTimeout(() => resolve(true), 800));
+export const AdapterWeb3 = {
+    async conectarBilletera() {
+        console.log(">> [Web3 Adapter] Solicitando firmas criptográficas...");
+        return new Promise(resolve => setTimeout(() => resolve({ address: "0xSONARCH...8f9" }), 1000));
+    },
+    async obtenerNodosActivos() {
+        return [{ id: 1, status: 'Online' }, { id: 2, status: 'Syncing' }];
     }
-}
+};

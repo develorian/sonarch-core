@@ -1,106 +1,94 @@
 // src/core/engine.js
-import cssText from '../css/global.css?raw';
-
-// 🛡️ MOTOR CSS (Constructable Stylesheets - Rendimiento Extremo)
-const globalSheet = new CSSStyleSheet();
-globalSheet.replaceSync(cssText);
-document.adoptedStyleSheets = [globalSheet]; // Aplica al documento general
 
 /**
- * @template T
- * @typedef {Object} Signal
- * @property {T} value
- * @property {function(function(T): void): function(): void} subscribe
- */
-
-// ==========================================================================
-// 1. MOTOR REACTIVO (Memoria Grano Fino O(1))
-// ==========================================================================
-
-/**
- * Crea un nodo de memoria reactiva.
  * @template T
  * @param {T} initialValue
- * @returns {Signal<T>}
+ * @returns {{ value: T, subscribe: (fn: (val: T) => void) => () => boolean }}
  */
 export function createSignal(initialValue) {
-    let value = initialValue;
-    /** @type {Set<function(T): void>} */
+    let _value = initialValue;
+    /** @type {Set<(val: T) => void>} */
     const subscribers = new Set();
-    
     return {
-        get value() { return value; },
+        get value() { return _value; },
         set value(newValue) {
-            if (value === newValue) return;
-            value = newValue;
-            subscribers.forEach(fn => fn(value));
+            // @ts-ignore
+            _value = typeof newValue === 'function' ? newValue(_value) : newValue;
+            subscribers.forEach(fn => fn(_value));
         },
-        subscribe(fn) {
-            subscribers.add(fn);
-            fn(value);
-            return () => subscribers.delete(fn); // Detonador de limpieza
+        subscribe: (subscriber) => {
+            subscribers.add(subscriber);
+            return () => subscribers.delete(subscriber);
         }
     };
 }
 
-/** @type {Signal<string>} */
+/** @type {ReturnType<typeof createSignal<string>>} */
 export const themeSignal = createSignal('dark');
-themeSignal.subscribe(theme => document.documentElement.setAttribute('data-theme', String(theme)));
 
+// ==========================================
+// OPTIMIZACIÓN LEYENDA: Constructable Stylesheets (Síncrono)
+// ==========================================
+// @ts-ignore -> Le decimos a VSCode que ignore esta sintaxis exclusiva de Vite
+import globalCss from '/src/css/global.css?inline';
 
-// ==========================================================================
-// 2. FÁBRICA DE COMPONENTES SOBERANOS (Shadow DOM)
-// ==========================================================================
+/** @type {CSSStyleSheet} */
+const globalSheet = new CSSStyleSheet();
+globalSheet.replaceSync(globalCss); // ¡Carga instantánea en RAM, cero esperas de red!
 
+// ==========================================
+// DEFINICIÓN DE COMPONENTES Y SHADOW DOM
+// ==========================================
 /**
  * @typedef {Object} ComponentConfig
  * @property {string} template
- * @property {function(ShadowRoot): (function(): void | void)} [setup]
+ * @property {(dom: ShadowRoot) => (void | (() => void))} [setup]
  */
 
 /**
- * Registra un Web Component de grado militar.
  * @param {string} tagName
- * @param {function(Object<string, string>): ComponentConfig} componentFn
+ * @param {(attbr: Record<string, string>) => ComponentConfig} componentFactory
  */
-export function defineComponent(tagName, componentFn) {
+export function defineComponent(tagName, componentFactory) {
     if (customElements.get(tagName)) return;
 
     customElements.define(tagName, class extends HTMLElement {
         constructor() {
             super();
             this.attachShadow({ mode: 'open' });
-            /** @type {function(): void | null} */
-            this._cleanup = null;
+            /** @type {Array<() => void>} */
+            this._cleanupFns = [];
         }
 
+        // Ya no somos asíncronos. La velocidad es máxima.
         connectedCallback() {
-            /** @type {Object<string, string>} */
+            /** @type {Record<string, string>} */
             const attbr = {};
-            Array.from(this.attributes).forEach(attr => {
+            for (let attr of this.attributes) {
                 if (attr.name.startsWith('attbr-')) {
                     attbr[attr.name.replace('attbr-', '')] = attr.value;
                 }
-            });
+            }
 
-            const { template, setup } = componentFn(attbr);
-
-            if (this.shadowRoot) {
-                // 🚀 INYECCIÓN CSS NATIVA Y SOBERANA
-                this.shadowRoot.adoptedStyleSheets = [globalSheet];
+            const { template, setup } = componentFactory(attbr);
+            
+            if(this.shadowRoot) {
                 this.shadowRoot.innerHTML = template;
+                // Adoptamos la hoja maestra instantáneamente
+                this.shadowRoot.adoptedStyleSheets = [globalSheet];
             }
 
             if (setup && this.shadowRoot) {
-                this._cleanup = setup(this.shadowRoot) || null; 
+                const cleanup = setup(this.shadowRoot);
+                if (typeof cleanup === 'function') {
+                    this._cleanupFns.push(cleanup);
+                }
             }
         }
 
         disconnectedCallback() {
-            if (typeof this._cleanup === 'function') {
-                this._cleanup();
-            }
-            this._cleanup = null;
+            this._cleanupFns.forEach(fn => fn());
+            this._cleanupFns = [];
         }
     });
 }

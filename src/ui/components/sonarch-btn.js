@@ -1,11 +1,11 @@
-import { defineComponent, createSignal } from '../../core/engine.js';
+import { defineComponent, createSignal } from '/src/core/engine.js';
 
 export const conexiones = createSignal(0);
 
 defineComponent('sonarch-btn', (attbr) => ({
-    template: /*html*/`
+    template: `
         <button class="btn-core w-full mt-4">
-            <span id="texto">${conexiones.value > 0 ? 'CONECTADO' : attbr.text}</span> 
+            <span id="texto">${conexiones.value > 0 ? 'CONECTADO' : (attbr.text || 'ACCIÓN')}</span> 
             <span class="txt-tn ml-2" style="opacity: 0.8; color: white;">
                 [ Nodos: <span id="contador">${conexiones.value}</span> ]
             </span>
@@ -16,7 +16,7 @@ defineComponent('sonarch-btn', (attbr) => ({
         const contador = dom.querySelector('#contador');
         const texto = dom.querySelector('#texto');
 
-        conexiones.subscribe(val => {
+        const unsubscribe = conexiones.subscribe(val => {
             if (contador) contador.textContent = String(val);
         });
 
@@ -26,7 +26,9 @@ defineComponent('sonarch-btn', (attbr) => ({
             setTimeout(() => {
                 if (texto) texto.textContent = "CONECTADO";
                 conexiones.value++;
-            }, 800);
-        });
+            },400);
+        }); 
+
+        return unsubscribe; // Limpieza automática
     }
 }));

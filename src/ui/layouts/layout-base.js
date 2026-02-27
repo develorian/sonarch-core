@@ -1,19 +1,14 @@
-import { defineComponent } from '../../core/engine.js';
-// Importamos la Navbar recién creada
-import '../components/sonarch-navbar.js'; 
+import { defineComponent } from '/src/core/engine.js';
+import '/src/ui/components/sonarch-navbar.js';
 
 defineComponent('layout-base', () => {
     return {
-        // El Layout ahora es un mapa espacial puro, sin código basura
-        template: `
+        template: /*html*/`
             <div class="fx fx-col min-h-screen">
-                
                 <sonarch-navbar></sonarch-navbar>
-
-                <main class="flex-1 p-lg fx just-ctr items-ctr" style="position: relative; z-index: 10;">
-                    <slot name="content"></slot>
-                </main>
-
+                <div class="content-area p-md fx fx-col items-ctr" style="flex: 1; padding-bottom: 4rem;">
+                    <slot></slot> 
+                </div>
             </div>
         `
     };

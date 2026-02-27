@@ -7,9 +7,10 @@
     "theme_color": "#00f2ff",
     "icons": [
         {
-            "src": "https://via.placeholder.com/192",
+            "src": "icon.ico",
             "sizes": "192x192",
             "type": "image/png"
         }
-    ]
+    ],
+    "description": "Nodo cliente de la Arquitectura soberana"
 }

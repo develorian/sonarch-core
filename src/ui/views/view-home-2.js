@@ -1,5 +1,5 @@
-import { defineComponent } from '/src/core/engine.js'; 
-import '/src/ui/components/sonarch-btn.js';           
+import { defineComponent } from '/src/core/engine.js'; // Ruta absoluta
+import '/src/ui/components/sonarch-btn.js';           // Ruta absoluta
 
 const svgLogo = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="180" height="180" class="drop-shadow-cyan" style="margin-bottom: 2rem;">

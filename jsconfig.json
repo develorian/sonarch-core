@@ -3,15 +3,30 @@
         "checkJs": true,
         "strict": true,
         "target": "ESNext",
-        "module": "Node16",
-        "moduleResolution": "node16",
+        "module": "ESNext",
+        "moduleResolution": "node",
         "lib": [
-            "DOM",
-            "DOM.Iterable",
             "ESNext"
-        ]
+        ],
+        "allowJs": true,
+        "noEmit": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitOverride": true,
+        "ignoreDeprecations": "6.0",
+        "baseUrl": ".",
+        "paths": {
+            "/src/*": [
+                "src/*"
+            ]
+        }
     },
-    "include": [
-        "src/**/*"
+    "exclude": [
+        "node_modules",
+        "dist"
     ]
 }

@@ -1,56 +1,81 @@
 // src/core/router.js
+
+/**
+ * @typedef {Object} Route
+ * @property {RegExp} regex
+ * @property {string[]} keys
+ * @property {string} tag
+ */
+
+/** @type {Record<string, string>} */
+export let currentParams = {};
+/** @type {Record<string, string>} */
+export let currentQuery = {};
+/** @type {Route[]} */
+const routes = [];
+
 export const Router = {
-    routes: {},
-
-    Route(path, layoutTag, viewTag) {
-        this.routes[path] = { layoutTag, viewTag };
+    /**
+     * @param {string} path
+     * @param {string} tag
+     */
+    add: (path, tag) => {
+        /** @type {string[]} */
+        const keys = [];
+        const regexString = "^" + path.replace(/:([^\/]+)/g, (_, key) => {
+            keys.push(key); return "([^/]+)";
+        }) + "$";
+        routes.push({ regex: new RegExp(regexString), keys, tag });
     },
-
-    navigate(path) {
-        console.log(`[SONARCH Router] pushState hacia: ${path}`);
-        window.history.pushState({}, "", path);
-        this.render();
+    
+    /** @param {string} path */
+    navigate: (path) => {
+        history.pushState(null, '', path);
+        Router.resolve();
     },
-
-    render() {
+    
+    resolve: () => {
+        const routerOutlet = document.querySelector('main');
         const path = window.location.pathname;
-        const route = this.routes[path] || this.routes['/'];
-        const appContainer = document.querySelector('sonarch-app');
-        
-        if (!appContainer) {
-            console.error("[SONARCH Router] ERROR: Contenedor <sonarch-app> no encontrado.");
-            return;
+        const searchParams = new URLSearchParams(window.location.search);
+
+        currentQuery = {};
+        for (const [key, value] of searchParams.entries()) currentQuery[key] = value;
+
+        let matchFound = false;
+        for (const route of routes) {
+            const match = path.match(route.regex);
+            if (match) {
+                matchFound = true;
+                currentParams = {};
+                route.keys.forEach((k, i) => {
+                    if(match[i + 1]) currentParams[k] = match[i + 1];
+                });
+
+                let attrs = '';
+                for (const k in currentParams) attrs += `attbr-${k}="${currentParams[k]}" `;
+                for (const k in currentQuery) attrs += `attbr-${k}="${currentQuery[k]}" `;
+
+                if (routerOutlet) {
+                    routerOutlet.innerHTML = `<${route.tag} ${attrs.trim()}></${route.tag}>`;
+                }
+                break;
+            }
         }
-
-        const currentLayout = appContainer.firstElementChild;
-        console.log(`[SONARCH Router] Inyectando Vista: <${route.viewTag}>`);
-
-        if (currentLayout && currentLayout.tagName.toLowerCase() === route.layoutTag) {
-            // Reemplaza solo el contenido central (Cero parpadeos)
-            currentLayout.innerHTML = `<${route.viewTag} slot="content"></${route.viewTag}>`;
-        } else {
-            // Construye toda la estructura si es la primera carga
-            appContainer.innerHTML = `
-                <${route.layoutTag}>
-                    <${route.viewTag} slot="content"></${route.viewTag}>
-                </${route.layoutTag}>
-            `;
+        if (!matchFound && routerOutlet) {
+            routerOutlet.innerHTML = `<h2 style="text-align:center; margin-top:2rem;">404 - Nodo no encontrado</h2>`;
         }
     }
 };
 
-window.addEventListener("popstate", () => Router.render());
-
-// SECUESTRADOR DE ENLACES (Bulletproof)
-document.addEventListener("click", (e) => {
+window.addEventListener('popstate', Router.resolve);
+document.body.addEventListener('click', e => {
+    // @ts-ignore
     const path = e.composedPath();
-    
-    // El uso de "?." (Optional Chaining) evita errores con Nodos de Texto o Documentos
-    const anchor = path.find(el => el?.tagName?.toUpperCase() === 'A');
+    const target = path.find(el => el.hasAttribute && el.hasAttribute('data-link'));
 
-    if (anchor && anchor.href && anchor.href.startsWith(window.location.origin)) {
-        e.preventDefault(); // Detiene la recarga de página brutal
-        const routePath = new URL(anchor.href).pathname;
-        Router.navigate(routePath);
+    if (target) {
+        e.preventDefault();
+        Router.navigate(target.getAttribute('href') || '/');
     }
 });
