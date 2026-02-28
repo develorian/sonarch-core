@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sovereign Node | SONARCH</title>
+    <meta name="description" content="Nodo de la Arquitectura Soberana">
+    <link rel="manifest" href="public/manifest.json">
+    <link rel="icon" href="data:,">
+    <link rel="apple-touch-icon" href="data:,">
+
+</head>
+
+<body class="bg-base text-dark transition">
+
+    <sonarch-app>
+        <layout-base>
+            <main></main>
+        </layout-base>
+    </sonarch-app>
+
+    <script type="module" src="/src/main.js"></script>
+    <!-- <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+        }
+    </script> // Quitar comentarios para producción -->
+</body>
+
+</html>

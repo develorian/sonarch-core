@@ -1,100 +1,100 @@
 (function() {
   const s = document.createElement("link").relList;
   if (s && s.supports && s.supports("modulepreload")) return;
-  for (const t of document.querySelectorAll('link[rel="modulepreload"]')) a(t);
+  for (const t of document.querySelectorAll('link[rel="modulepreload"]')) o(t);
   new MutationObserver((t) => {
-    for (const e of t) if (e.type === "childList") for (const i of e.addedNodes) i.tagName === "LINK" && i.rel === "modulepreload" && a(i);
+    for (const r of t) if (r.type === "childList") for (const i of r.addedNodes) i.tagName === "LINK" && i.rel === "modulepreload" && o(i);
   }).observe(document, { childList: true, subtree: true });
-  function o(t) {
-    const e = {};
-    return t.integrity && (e.integrity = t.integrity), t.referrerPolicy && (e.referrerPolicy = t.referrerPolicy), t.crossOrigin === "use-credentials" ? e.credentials = "include" : t.crossOrigin === "anonymous" ? e.credentials = "omit" : e.credentials = "same-origin", e;
-  }
   function a(t) {
+    const r = {};
+    return t.integrity && (r.integrity = t.integrity), t.referrerPolicy && (r.referrerPolicy = t.referrerPolicy), t.crossOrigin === "use-credentials" ? r.credentials = "include" : t.crossOrigin === "anonymous" ? r.credentials = "omit" : r.credentials = "same-origin", r;
+  }
+  function o(t) {
     if (t.ep) return;
     t.ep = true;
-    const e = o(t);
-    fetch(t.href, e);
+    const r = a(t);
+    fetch(t.href, r);
   }
 })();
 let p = {}, h = {};
-const g = [], f = { add: (r, s) => {
-  const o = [], a = "^" + r.replace(/:([^\/]+)/g, (t, e) => (o.push(e), "([^/]+)")) + "$";
-  g.push({ regex: new RegExp(a), keys: o, tag: s });
-}, navigate: (r) => {
-  history.pushState(null, "", r), f.resolve();
+const u = [], l = { add: (e, s) => {
+  const a = [], o = "^" + e.replace(/:([^\/]+)/g, (t, r) => (a.push(r), "([^/]+)")) + "$";
+  u.push({ regex: new RegExp(o), keys: a, tag: s });
+}, navigate: (e) => {
+  history.pushState(null, "", e), l.resolve();
 }, resolve: () => {
-  const r = document.querySelector("main"), s = window.location.pathname, o = new URLSearchParams(window.location.search);
+  const e = document.querySelector("main"), s = window.location.pathname, a = new URLSearchParams(window.location.search);
   h = {};
-  for (const [t, e] of o.entries()) h[t] = e;
-  let a = false;
-  for (const t of g) {
-    const e = s.match(t.regex);
-    if (e) {
-      a = true, p = {}, t.keys.forEach((n, d) => {
-        e[d + 1] && (p[n] = e[d + 1]);
+  for (const [t, r] of a.entries()) h[t] = r;
+  let o = false;
+  for (const t of u) {
+    const r = s.match(t.regex);
+    if (r) {
+      o = true, p = {}, t.keys.forEach((c, f) => {
+        r[f + 1] && (p[c] = r[f + 1]);
       });
       let i = "";
-      for (const n in p) i += `attbr-${n}="${p[n]}" `;
-      for (const n in h) i += `attbr-${n}="${h[n]}" `;
-      r && (r.innerHTML = `<${t.tag} ${i.trim()}></${t.tag}>`);
+      for (const c in p) i += `attbr-${c}="${p[c]}" `;
+      for (const c in h) i += `attbr-${c}="${h[c]}" `;
+      e && (e.innerHTML = `<${t.tag} ${i.trim()}></${t.tag}>`);
       break;
     }
   }
-  !a && r && (r.innerHTML = '<h2 style="text-align:center; margin-top:2rem;">404 - Nodo no encontrado</h2>');
+  !o && e && (e.innerHTML = '<h2 style="text-align:center; margin-top:2rem;">404 - Nodo no encontrado</h2>');
 } };
-window.addEventListener("popstate", f.resolve);
-document.body.addEventListener("click", (r) => {
-  const o = r.composedPath().find((a) => a.hasAttribute && a.hasAttribute("data-link"));
-  o && (r.preventDefault(), f.navigate(o.getAttribute("href") || "/"));
+window.addEventListener("popstate", l.resolve);
+document.body.addEventListener("click", (e) => {
+  const a = e.composedPath().find((o) => o.hasAttribute && o.hasAttribute("data-link"));
+  a && (e.preventDefault(), l.navigate(a.getAttribute("href") || "/"));
 });
 const y = `:host{display:block;width:100%;box-sizing:border-box}:root{--color-cyan: #00f2ff;--color-blue: #4facfe;--color-purple: #8b5cf6;--bg-base: #f8f9fa;--bg-surface: #ffffff;--text-main: #1e293b;--text-mut: #64748b;--grad-primary: linear-gradient(135deg, var(--color-purple), var(--color-blue));--sz-tn: clamp(.25rem, 1vw, .5rem);--sz-sm: clamp(.5rem, 2vw, .75rem);--sz-md: clamp(1rem, 3vw, 1.25rem);--sz-lg: clamp(1.5rem, 4vw, 2rem);--sz-xl: clamp(2rem, 5vw, 3rem);font-family:Inter,system-ui,sans-serif;color-scheme:light dark}[data-theme=dark]{--bg-base: #0a0a12;--bg-surface: #13161c;--text-main: #f0f4f8;--text-mut: #94a3b8;--grad-primary: linear-gradient(135deg, var(--color-blue), var(--color-cyan))}*,*:before,*:after{box-sizing:border-box;margin:0;padding:0}body{background-color:var(--bg-base);color:var(--text-main);height:100dvh;position:relative;overflow:hidden;transition:background-color .4s ease,color .4s ease;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}body:before{content:"";position:fixed;inset:0;z-index:-2;background-color:color-mix(in srgb,var(--text-main) 5%,transparent);mask-image:url("data:image/svg+xml,%3Csvg width='60' height='103.9' viewBox='0 0 60 103.9' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill-opacity='0' stroke='%23000' stroke-width='1'/%3E%3Cpath d='M30 103.9l25.98-15v-30L30 43.9l-25.98 15v30z' fill-opacity='0' stroke='%23000' stroke-width='1'/%3E%3C/svg%3E");mask-size:60px 103.9px;pointer-events:none}body{background-color:var(--bg-base);color:var(--text-main);min-height:100dvh;position:relative;overflow-x:hidden;overflow-y:auto;transition:background-color .4s ease,color .4s ease;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;scrollbar-width:none;-ms-overflow-style:none}body::-webkit-scrollbar{display:none}@keyframes pulse-network{0%{opacity:.5;transform:scale(1)}to{opacity:1;transform:scale(1.05)}}.fx{display:flex}.fx-col{flex-direction:column}.items-ctr{align-items:center}.just-ctr{justify-content:center}.just-btw{justify-content:space-between}.w-full{width:100%}.h-full{height:100%}.gap-tn{gap:var(--sz-tn)}.gap-sm{gap:var(--sz-sm)}.gap-md{gap:var(--sz-md)}.gap-lg{gap:var(--sz-lg)}.gap-xl{gap:var(--sz-xl)}.p-tn{padding:var(--sz-tn)}.p-sm{padding:var(--sz-sm)}.p-md{padding:var(--sz-md)}.p-lg{padding:var(--sz-lg)}.p-xl{padding:var(--sz-xl)}.txt-tn{font-size:clamp(.65rem,.8vw,.75rem)}.txt-sm{font-size:clamp(.75rem,1vw,.875rem)}.txt-md{font-size:clamp(.875rem,1vw + .5rem,1rem);text-wrap:pretty}.txt-lg{font-size:clamp(1.125rem,2vw + .5rem,1.25rem);text-wrap:balance}.txt-xl{font-size:clamp(2rem,5vw,4rem);text-wrap:balance;line-height:1.1;font-weight:800;letter-spacing:-.02em}.fw-bold{font-weight:700}.txt-ctr{text-align:center}.tc-main{color:var(--text-main)}.tc-mut{color:var(--text-mut)}.tc-grad{background:var(--grad-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.gls-panel{background:color-mix(in srgb,var(--bg-surface) 60%,transparent);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid color-mix(in srgb,var(--text-main) 10%,transparent);border-radius:var(--sz-md);box-shadow:0 8px 32px color-mix(in srgb,var(--text-main) 5%,transparent);transition:all .3s cubic-bezier(.16,1,.3,1)}.gls-panel.hover-fx:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--color-cyan) 30%,transparent);box-shadow:0 15px 40px color-mix(in srgb,var(--color-cyan) 10%,transparent)}.btn-core{background:var(--grad-primary);color:#fff;border:none;padding:var(--sz-sm) var(--sz-lg);border-radius:var(--sz-tn);font-weight:700;cursor:pointer;transition:all .2s ease}.btn-core:hover{transform:scale(1.02);filter:brightness(1.1);box-shadow:0 0 20px color-mix(in srgb,var(--color-cyan) 40%,transparent)}.btn-core:active{transform:scale(.98)}@keyframes fadeInSlide{0%{opacity:0;transform:translateY(20px);filter:blur(5px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}.anim-fade{animation:fadeInSlide .5s cubic-bezier(.16,1,.3,1) forwards}`;
-function x(r) {
-  let s = r;
-  const o = /* @__PURE__ */ new Set();
+function x(e) {
+  let s = e;
+  const a = /* @__PURE__ */ new Set();
   return { get value() {
     return s;
-  }, set value(a) {
-    s = typeof a == "function" ? a(s) : a, o.forEach((t) => t(s));
-  }, subscribe: (a) => (o.add(a), () => o.delete(a)) };
+  }, set value(o) {
+    s = typeof o == "function" ? o(s) : o, a.forEach((t) => t(s));
+  }, subscribe: (o) => (a.add(o), () => a.delete(o)) };
 }
-const m = x("dark"), b = new CSSStyleSheet();
-b.replaceSync(y);
-function c(r, s) {
-  customElements.get(r) || customElements.define(r, class extends HTMLElement {
+const m = x("dark"), v = new CSSStyleSheet();
+v.replaceSync(y);
+function n(e, s) {
+  customElements.get(e) || customElements.define(e, class extends HTMLElement {
     constructor() {
       super(), this.attachShadow({ mode: "open" }), this._cleanupFns = [];
     }
     connectedCallback() {
-      const o = {};
-      for (let e of this.attributes) e.name.startsWith("attbr-") && (o[e.name.replace("attbr-", "")] = e.value);
-      const { template: a, setup: t } = s(o);
-      if (this.shadowRoot && (this.shadowRoot.innerHTML = a, this.shadowRoot.adoptedStyleSheets = [b]), t && this.shadowRoot) {
-        const e = t(this.shadowRoot);
-        typeof e == "function" && this._cleanupFns.push(e);
+      const a = {};
+      for (let r of this.attributes) r.name.startsWith("attbr-") && (a[r.name.replace("attbr-", "")] = r.value);
+      const { template: o, setup: t } = s(a);
+      if (this.shadowRoot && (this.shadowRoot.innerHTML = o, this.shadowRoot.adoptedStyleSheets = [v]), t && this.shadowRoot) {
+        const r = t(this.shadowRoot);
+        typeof r == "function" && this._cleanupFns.push(r);
       }
     }
     disconnectedCallback() {
-      this._cleanupFns.forEach((o) => o()), this._cleanupFns = [];
+      this._cleanupFns.forEach((a) => a()), this._cleanupFns = [];
     }
   });
 }
-c("sonarch-app", () => ({ template: `
+n("sonarch-app", () => ({ template: `
             <div class="sonarch-root-container">
                 <slot></slot> 
             </div>
         `, setup: () => {
   console.log("[SONARCH] Capa de aplicaci\xF3n ra\xEDz montada y asegurada.");
 } }));
-c("sonarch-theme-toggle", () => {
-  const r = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>', s = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
-  return { template: '<button class="p-2 rounded-full cursor-pointer bg-glass border-glass text-dark transition" id="theme-btn" style="background:transparent; border:none; color:var(--text-main);"></button>', setup: (o) => {
-    const a = o.querySelector("#theme-btn"), t = (i) => a.innerHTML = i === "dark" ? s : r, e = m.subscribe(t);
-    return t(m.value), a.addEventListener("click", () => {
+n("sonarch-theme-toggle", () => {
+  const e = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>', s = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  return { template: '<button class="p-2 rounded-full cursor-pointer bg-glass border-glass text-dark transition" id="theme-btn" style="background:transparent; border:none; color:var(--text-main);"></button>', setup: (a) => {
+    const o = a.querySelector("#theme-btn"), t = (i) => o.innerHTML = i === "dark" ? s : e, r = m.subscribe(t);
+    return t(m.value), o.addEventListener("click", () => {
       m.value = m.value === "light" ? "dark" : "light", document.documentElement.setAttribute("data-theme", m.value);
-    }), e;
+    }), r;
   } };
 });
-c("sonarch-navbar", () => ({ template: `
+n("sonarch-navbar", () => ({ template: `
             <style>
                 /* Mantiene la barra fija en la parte superior al hacer scroll */
                 :host {
@@ -116,7 +116,7 @@ c("sonarch-navbar", () => ({ template: `
                 </div>
             </header>
         ` }));
-c("layout-base", () => ({ template: `
+n("layout-base", () => ({ template: `
             <div class="fx fx-col min-h-screen">
                 <sonarch-navbar></sonarch-navbar>
                 <div class="content-area p-md fx fx-col items-ctr" style="flex: 1; padding-bottom: 4rem;">
@@ -124,23 +124,23 @@ c("layout-base", () => ({ template: `
                 </div>
             </div>
         ` }));
-const l = x(0);
-c("sonarch-btn", (r) => ({ template: `
+const d = x(0);
+n("sonarch-btn", (e) => ({ template: `
         <button class="btn-core w-full mt-4">
-            <span id="texto">${l.value > 0 ? "CONECTADO" : r.text || "ACCI\xD3N"}</span> 
+            <span id="texto">${d.value > 0 ? "CONECTADO" : e.text || "ACCI\xD3N"}</span> 
             <span class="txt-tn ml-2" style="opacity: 0.8; color: white;">
-                [ Nodos: <span id="contador">${l.value}</span> ]
+                [ Nodos: <span id="contador">${d.value}</span> ]
             </span>
         </button>
     `, setup: (s) => {
-  const o = s.querySelector("button"), a = s.querySelector("#contador"), t = s.querySelector("#texto"), e = l.subscribe((i) => {
-    a && (a.textContent = String(i));
+  const a = s.querySelector("button"), o = s.querySelector("#contador"), t = s.querySelector("#texto"), r = d.subscribe((i) => {
+    o && (o.textContent = String(i));
   });
-  return o && o.addEventListener("click", () => {
+  return a && a.addEventListener("click", () => {
     !t || t.textContent === "CONECTANDO..." || (t.textContent = "CONECTANDO...", setTimeout(() => {
-      t && (t.textContent = "CONECTADO"), l.value++;
+      t && (t.textContent = "CONECTADO"), d.value++;
     }, 400));
-  }), e;
+  }), r;
 } }));
 const w = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="180" height="180" class="drop-shadow-cyan" style="margin-bottom: 2rem;">
@@ -162,7 +162,7 @@ const w = `
     <circle cx="200" cy="310" r="15" fill="none" stroke="#00f2ff" stroke-width="3"/>
     <circle cx="200" cy="310" r="5" fill="#00f2ff"/>
 </svg>`;
-c("view-home", () => ({ template: `
+n("view-home", () => ({ template: `
             <div class="fx items-ctr just-ctr w-full anim-fade" style="height: 100%;">
                 <section class="fx fx-col items-ctr txt-ctr gap-lg" style="max-width: 600px; margin: 0 auto;">
                     ${w}
@@ -175,7 +175,7 @@ c("view-home", () => ({ template: `
                 </section>
             </div>
         ` }));
-const u = { abeja: `
+const g = { abeja: `
         <svg viewBox="0 0 200 200" width="100" height="100" class="drop-shadow-cyan">
             <g transform="translate(100, 100)">
                 <polygon points="0,-40 34,-20 34,20 0,40 -34,20 -34,-20" fill="#1f242d" stroke="#00f2ff" stroke-width="2"/>
@@ -211,30 +211,30 @@ const u = { abeja: `
                 <circle cx="-45" cy="45" r="5" fill="#8b5cf6"/><circle cx="45" cy="-45" r="5" fill="#8b5cf6"/>
             </g>
         </svg>` };
-c("sonarch-card", (r) => {
-  const s = (/* @__PURE__ */ new Date()).toLocaleDateString("es-ES", { year: "numeric", month: "long", day: "numeric" }), o = r.tipo === "dinamica", a = r.titulo || "PULSO DEL ENJAMBRE", t = r.desc || "Nodos activos fortificando la red neuronal descentralizada. Presencia confirmada.", e = o ? l.value : r.valor || "0";
+n("sonarch-card", (e) => {
+  const s = (/* @__PURE__ */ new Date()).toLocaleDateString("es-ES", { year: "numeric", month: "long", day: "numeric" }), a = e.tipo === "dinamica", o = e.titulo || "PULSO DEL ENJAMBRE", t = e.desc || "Nodos activos fortificando la red neuronal descentralizada. Presencia confirmada.", r = a ? d.value : e.valor || "0";
   return { template: `
             <div class="gls-panel p-lg fx fx-col items-ctr txt-ctr hover-fx h-full" style="width: 100%;">
-                ${u[r.icono] || u.abeja}
-                <h3 class="txt-md fw-bold tc-grad" style="margin-top: 1rem; text-transform: uppercase;">${a}</h3>
+                ${g[e.icono] || g.abeja}
+                <h3 class="txt-md fw-bold tc-grad" style="margin-top: 1rem; text-transform: uppercase;">${o}</h3>
                 <p class="txt-sm tc-mut" style="margin-top: 0.5rem; margin-bottom: 1.5rem; flex: 1;">${t}</p>
                 
                 <div class="fw-bold tc-main" style="font-size: 3.5rem; line-height: 1; text-shadow: 0 0 20px color-mix(in srgb, var(--color-cyan) 40%, transparent);">
-                    <span ${o ? 'id="nodo-display"' : ""}>${e}</span>
+                    <span ${a ? 'id="nodo-display"' : ""}>${r}</span>
                 </div>
                 
                 <div class="txt-tn tc-mut" style="margin-top: 1.5rem; opacity: 0.7; letter-spacing: 0.1em; text-transform: uppercase;">
                     ${s}
                 </div>
             </div>
-        `, setup: (n) => {
-    if (o) {
-      const d = n.querySelector("#nodo-display");
-      if (d) return d.textContent = String(l.value), l.subscribe((v) => d.textContent = String(v));
+        `, setup: (c) => {
+    if (a) {
+      const f = c.querySelector("#nodo-display");
+      if (f) return f.textContent = String(d.value), d.subscribe((b) => f.textContent = String(b));
     }
   } };
 });
-c("view-enjambre", () => ({ template: `
+n("view-enjambre", () => ({ template: `
             <div class="fx items-ctr just-ctr w-full anim-fade" style="min-height: calc(100vh - 120px);">
                 <section class="fx fx-col just-ctr items-ctr gap-xl" style="width: 100%; max-width: 1200px;">
                     
@@ -255,10 +255,70 @@ c("view-enjambre", () => ({ template: `
                         <sonarch-card attbr-icono="red" attbr-titulo="LATENCIA DE RED" attbr-desc="Tiempo de respuesta P2P estimado." attbr-valor="12ms"></sonarch-card>
                     </div>
 
+                    <div class="txt-ctr mt-4" style="margin-top: 1rem;">
+                    
+                    <!-- Agregamos par de combinaciones de b\xFAsquedas, para probar rutas con querys-->
+                    <div class="fx gap-md mt-4 just-ctr" style="margin-top: 2rem;">
+                        <a href="/busqueda?q=Criptografia" data-link class="btn-core" style="text-decoration: none;">Buscar Cripto</a>
+                        
+                        <a href="/busqueda?q=Redes+Mesh&filtro=Militares" data-link class="btn-core" style="text-decoration: none;">Buscar Redes (Con Filtro)</a>
+                    </div>
+
+                    <div class="txt-ctr mt-4" style="margin-top: 1rem;">
+                    <a href="/nodo/777" data-link class="txt-md fw-bold tc-cyan hover-fx">>> INSPECIONAR NODO 777 <<</a>
+                    </div>
+
                 </section>
             </div>
         ` }));
-f.add("/", "view-home");
-f.add("/enjambre", "view-enjambre");
-f.resolve();
+n("view-nodo", (e) => ({ template: `
+            <div class="fx items-ctr just-ctr w-full anim-fade" style="min-height: calc(100vh - 120px);">
+                <div class="gls-panel p-xl txt-ctr fx fx-col items-ctr" style="max-width: 400px;">
+                    
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--grad-primary); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                        <span class="txt-xl fw-bold" style="color: white;">${e.id || "Desconocido"}</span>
+                    </div>
+                    
+                    <h2 class="txt-lg fw-bold tc-main tracking-widest">PERFIL DEL NODO</h2>
+                    <p class="tc-mut txt-sm mt-2" style="margin-bottom: 2rem;">
+                        Est\xE1s viendo la informaci\xF3n din\xE1mica del nodo aislado. La ruta ha inyectado el par\xE1metro de forma nativa.
+                    </p>
+
+                    <a href="/enjambre" data-link class="btn-core" style="text-decoration: none;">VOLVER AL ENJAMBRE</a>
+                </div>
+            </div>
+        ` }));
+n("view-busqueda", (e) => {
+  const s = e.q || "B\xFAsqueda vac\xEDa", a = e.filtro || "Todos";
+  return { template: `
+            <div class="fx items-ctr just-ctr w-full anim-fade" style="min-height: calc(100vh - 120px);">
+                <div class="gls-panel p-xl txt-ctr fx fx-col items-ctr" style="max-width: 500px;">
+                    
+                    <h2 class="txt-lg fw-bold tc-main tracking-widest">RESULTADOS DE B\xDASQUEDA</h2>
+                    
+                    <div class="fx gap-md mt-4" style="margin: 1.5rem 0; width: 100%; justify-content: center;">
+                        <div class="p-sm" style="border: 1px solid var(--color-cyan); border-radius: var(--sz-sm);">
+                            <span class="tc-mut txt-sm">T\xE9rmino (?q=):</span><br>
+                            <span class="tc-main fw-bold txt-md">${s}</span>
+                        </div>
+                        <div class="p-sm" style="border: 1px solid var(--color-purple); border-radius: var(--sz-sm);">
+                            <span class="tc-mut txt-sm">Filtro (?filtro=):</span><br>
+                            <span class="tc-main fw-bold txt-md">${a}</span>
+                        </div>
+                    </div>
+
+                    <p class="tc-mut txt-sm">
+                        Tu enrutador parse\xF3 los Query Parameters sin recargar la p\xE1gina.
+                    </p>
+
+                    <a href="/enjambre" data-link class="btn-core mt-4" style="text-decoration: none; margin-top: 1.5rem;">VOLVER</a>
+                </div>
+            </div>
+        ` };
+});
+l.add("/", "view-home");
+l.add("/enjambre", "view-enjambre");
+l.add("/nodo/:id", "view-nodo");
+l.add("/busqueda", "view-busqueda");
+l.resolve();
 console.log(">> SONARCH CORE: INICIADO CORRECTAMENTE");
