@@ -7,25 +7,25 @@
     <title>Sovereign Node | SONARCH</title>
     <meta name="description" content="Nodo de la Arquitectura Soberana">
     <link rel="manifest" href="public/manifest.json">
-    <link rel="icon" href="data:,">
-    <link rel="apple-touch-icon" href="data:,">
+    <link rel="icon" type="image/png" href="data:,">
+    <link rel="apple-touch-icon" type="image/png" href="data:,">
 
 </head>
 
 <body class="bg-base text-dark transition">
 
-    <sonarch-app>
-        <layout-base>
+    <sn-dapp>
+        <sn-base-layout>
             <main></main>
-        </layout-base>
-    </sonarch-app>
+        </sn-base-layout>
+    </sn-dapp>
 
     <script type="module" src="/src/main.js"></script>
-    <!-- <script>
+    <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
         }
-    </script> // Quitar comentarios para producción -->
+    </script>
 </body>
 
 </html>

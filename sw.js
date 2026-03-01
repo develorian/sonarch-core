@@ -1,6 +1,6 @@
 // sw.js (El Guardián Offline de SONARCH)
 
-const CACHE_NAME = 'sonarch-core-v0.1.0';
+const CACHE_NAME = 'sonarch-core-v0.2.0';
 
 // 🛡️ BÓVEDA DE SUPERVIVENCIA: Archivos mínimos para arrancar sin internet
 const ASSETS_TO_CACHE = [

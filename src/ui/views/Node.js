@@ -1,8 +1,8 @@
 import { defineComponent } from '/src/core/engine.js';
 
-defineComponent('view-nodo', (attbr) => {
+defineComponent('sn-node', (attrs) => {
     // Si la URL es /nodo/777, attbr.id será "777"
-    const nodoId = attbr.id || 'Desconocido'; 
+    const nodoId = attrs.id || 'Desconocido';
 
     return {
         template: /*html*/`

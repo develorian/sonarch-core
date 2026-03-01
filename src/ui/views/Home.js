@@ -1,5 +1,5 @@
-import { defineComponent } from '/src/core/engine.js'; 
-import '/src/ui/components/sonarch-btn.js';           
+import { defineComponent } from '/src/core/engine.js';
+import '/src/ui/components/Button.js';
 
 const svgLogo = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="180" height="180" class="drop-shadow-cyan" style="margin-bottom: 2rem;">
@@ -22,7 +22,7 @@ const svgLogo = `
     <circle cx="200" cy="310" r="5" fill="#00f2ff"/>
 </svg>`;
 
-defineComponent('view-home', () => {
+defineComponent('sn-home', () => {
     return {
         template: /*html*/`
             <div class="fx items-ctr just-ctr w-full anim-fade" style="height: 100%;">
@@ -33,7 +33,7 @@ defineComponent('view-home', () => {
                         Construyendo sistemas resilientes, post-cuánticos y sin intermediarios. 
                         El poder ha vuelto a los nodos.
                     </p>
-                    <sonarch-btn attbr-text="CONECTAR AL ENJAMBRE"></sonarch-btn>
+                    <sn-btn attrs-text="CONECTAR AL ENJAMBRE"></sn-btn>
                 </section>
             </div>
         `
