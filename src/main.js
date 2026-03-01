@@ -25,7 +25,7 @@ import "/src/ui/views/Search.js";
 
 // SYSTEM IGNITION
 // Instanciar la DApp
-const dapp = new DApp({ name: 'SONARCH Node', version: 'v0.1.1-alpha-MicroMotorJS' });
+const dapp = new DApp({ name: 'SONARCH Node', version: 'v0.2.0-alpha-MicroMotorJS-NakedF-Stable' });
 
 // Instanciar el Router Plugin (Ajusta basePath si suber a GitHub Pages = 'sonarch-core')
 // ⚡ INTERRUPTOR INTELIGENTE: Vite lo cambia automáticamente.
