@@ -1,81 +1,78 @@
-// src/core/router.js
-
 /**
- * @typedef {Object} Route
- * @property {RegExp} regex
- * @property {string[]} keys
- * @property {string} tag
+ * @module Router
+ * @description Sovereign SPA Router plugin. Zero-dependency, memory-safe.
  */
+export class Router {
+    constructor({ basePath = '' } = {}) {
+        this.basePath = basePath;
+        this.routes = [];
+        this.currentParams = {};
+        this.currentQuery = {};
+    }
 
-/** @type {Record<string, string>} */
-export let currentParams = {};
-/** @type {Record<string, string>} */
-export let currentQuery = {};
-/** @type {Route[]} */
-const routes = [];
-
-export const Router = {
-    /**
-     * @param {string} path
-     * @param {string} tag
-     */
-    add: (path, tag) => {
-        /** @type {string[]} */
+    add(path, viewFn) {
         const keys = [];
-        const regexString = "^" + path.replace(/:([^\/]+)/g, (_, key) => {
+        // Soporte para rutas dinámicas y ruta comodín '*'
+        let regexString = path === '*' ? "^.*$" : "^" + path.replace(/:([^\/]+)/g, (_, key) => {
             keys.push(key); return "([^/]+)";
         }) + "$";
-        routes.push({ regex: new RegExp(regexString), keys, tag });
-    },
-    
-    /** @param {string} path */
-    navigate: (path) => {
-        history.pushState(null, '', path);
-        Router.resolve();
-    },
-    
-    resolve: () => {
-        const routerOutlet = document.querySelector('main');
-        const path = window.location.pathname;
-        const searchParams = new URLSearchParams(window.location.search);
+        
+        this.routes.push({ regex: new RegExp(regexString), keys, viewFn });
+        return this; // Permite el encadenamiento: router.add().add()
+    }
 
-        currentQuery = {};
-        for (const [key, value] of searchParams.entries()) currentQuery[key] = value;
+    navigate(path) {
+        const fullPath = path === '/' ? this.basePath + '/' : this.basePath + path;
+        window.history.pushState(null, '', fullPath);
+        this.resolve();
+    }
+
+    resolve() {
+        // ⏱️ Inicia el cronómetro táctico
+        const startTime = performance.now();
+
+        let path = window.location.pathname;
+        if (this.basePath && path.startsWith(this.basePath)) {
+            path = path.replace(this.basePath, '') || '/';
+        }
+
+        const searchParams = new URLSearchParams(window.location.search);
+        this.currentQuery = {};
+        for (const [key, value] of searchParams.entries()) this.currentQuery[key] = value;
 
         let matchFound = false;
-        for (const route of routes) {
+        for (const route of this.routes) {
             const match = path.match(route.regex);
             if (match) {
                 matchFound = true;
-                currentParams = {};
+                this.currentParams = {};
                 route.keys.forEach((k, i) => {
-                    if(match[i + 1]) currentParams[k] = match[i + 1];
+                    if(match[i + 1]) this.currentParams[k] = match[i + 1];
                 });
-
-                let attrs = '';
-                for (const k in currentParams) attrs += `attbr-${k}="${currentParams[k]}" `;
-                for (const k in currentQuery) attrs += `attbr-${k}="${currentQuery[k]}" `;
-
-                if (routerOutlet) {
-                    routerOutlet.innerHTML = `<${route.tag} ${attrs.trim()}></${route.tag}>`;
-                }
+                // Ejecuta la función inyectora de main.js
+                route.viewFn(this.currentParams, this.currentQuery);
                 break;
             }
         }
-        if (!matchFound && routerOutlet) {
-            routerOutlet.innerHTML = `<h2 style="text-align:center; margin-top:2rem;">404 - Nodo no encontrado</h2>`;
-        }
+        // ⏱️ Detiene el cronómetro y dispara el log en consola
+        const endTime = performance.now();
+        console.log(
+            `%cPUMMM!!! 🚀 Esto fue veloz, recarga en: ${(endTime - startTime).toFixed(3)} ms 😎 ¡Somos la ley!`, 
+            'color: #00f2ff; font-weight: bold; font-size: 13px; text-shadow: 0 0 8px rgba(0, 242, 255, 0.8);'
+        );
     }
-};
 
-window.addEventListener('popstate', Router.resolve);
-document.body.addEventListener('click', e => {
-    // @ts-ignore
-    const path = e.composedPath();
-    const target = path.find(el => el.hasAttribute && el.hasAttribute('data-link'));
-
-    if (target) {
-        e.preventDefault();
-        Router.navigate(target.getAttribute('href') || '/');
+    ignite() {
+        window.addEventListener('popstate', () => this.resolve());
+        document.body.addEventListener('click', e => {
+            const path = e.composedPath();
+            const target = path.find(el => el.hasAttribute && el.hasAttribute('data-link'));
+            if (target) {
+                e.preventDefault();
+                this.navigate(target.getAttribute('href') || '/');
+            }
+        });
+        this.resolve();
+        console.log('[SONARCH] ⚡ Router plugin ignited.');
     }
-});
+}

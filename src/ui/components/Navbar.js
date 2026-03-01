@@ -1,7 +1,7 @@
 import { defineComponent } from '/src/core/engine.js';
-import '/src/ui/components/sonarch-theme-toggle.js';
+import './ThemeToggle.js';
 
-defineComponent('sonarch-navbar', () => {
+defineComponent('sn-navbar', () => {
     return {
         template: /*html*/`
             <style>
@@ -19,9 +19,10 @@ defineComponent('sonarch-navbar', () => {
                     <nav class="fx gap-lg">
                         <a href="/" data-link class="txt-sm fw-bold tc-mut hover-fx" style="text-decoration:none;">INICIO</a>
                         <a href="/enjambre" data-link class="txt-sm fw-bold tc-mut hover-fx" style="text-decoration:none;">ENJAMBRE</a>
+                        <a href="/dashboard" data-link class="txt-sm fw-bold tc-mut hover-fx" style="text-decoration:none;">DASHBOARD</a>
                     </nav>
                     <div style="width: 1px; height: 20px; background: var(--text-mut); opacity: 0.3; margin: 0 var(--sz-sm);"></div>
-                    <sonarch-theme-toggle></sonarch-theme-toggle>
+                    <sn-theme-toggle></sn-theme-toggle>
                 </div>
             </header>
         `

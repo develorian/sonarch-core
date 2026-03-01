@@ -1,7 +1,8 @@
-import { defineComponent } from '/src/core/engine.js'; 
-import '/src/ui/components/sonarch-card.js';
+import { defineComponent } from '/src/core/engine.js';
+import '/src/ui/components/Card.js';
+import '/src/ui/components/Button.js';
 
-defineComponent('view-enjambre', () => {
+defineComponent('sn-swarm', () => {
     return {
         template: /*html*/`
             <div class="fx items-ctr just-ctr w-full anim-fade" style="min-height: calc(100vh - 120px);">
@@ -16,12 +17,23 @@ defineComponent('view-enjambre', () => {
                     </div>
 
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--sz-lg); width: 100%; align-items: stretch;">
-                        <sonarch-card 
-                            attbr-tipo="dinamica" 
-                            attbr-icono="abeja">
-                        </sonarch-card>
-                        <sonarch-card attbr-icono="servidor" attbr-titulo="NODO BETA (ARCH)" attbr-desc="Servidor de bases de datos. KVM2 Activo." attbr-valor="UP"></sonarch-card>
-                        <sonarch-card attbr-icono="red" attbr-titulo="LATENCIA DE RED" attbr-desc="Tiempo de respuesta P2P estimado." attbr-valor="12ms"></sonarch-card>
+                        <sn-card 
+                            attrs-type="dinamica" 
+                            attrs-icon="abeja">
+                        </sn-card>
+                        <sn-card 
+                            attrs-type="dinamica" 
+                            attrs-icon="servidor" 
+                            attrs-title="NODO BETA (ARCH)" 
+                            attrs-desc="Servidor de bases de datos. KVM2 Activo." 
+                            attrs-value="UP">
+                        </sn-card>
+                        <sn-card 
+                            attrs-type="dinamica" 
+                            attrs-icon="red" 
+                            attrs-title="LATENCIA DE RED" 
+                            attrs-desc="Tiempo de respuesta P2P estimado." 
+                            attrs-value="12ms"></sn-card>
                     </div>
 
                     <div class="txt-ctr mt-4" style="margin-top: 1rem;">

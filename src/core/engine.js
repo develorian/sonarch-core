@@ -1,6 +1,17 @@
-// src/core/engine.js
+/**
+ * @module SovereignEngine
+ * @description Zero-VDOM, memory-safe reactive core
+ */
+
+// @ts-ignore
+import globalCss from '/src/css/global.css?inline';
+
+/** @type {CSSStyleSheet} */
+const globalSheet = new CSSStyleSheet();
+globalSheet.replaceSync(globalCss);
 
 /**
+ * Creates a reactive state primitive with functional update support.
  * @template T
  * @param {T} initialValue
  * @returns {{ value: T, subscribe: (fn: (val: T) => void) => () => boolean }}
@@ -9,15 +20,20 @@ export function createSignal(initialValue) {
     let _value = initialValue;
     /** @type {Set<(val: T) => void>} */
     const subscribers = new Set();
+
     return {
         get value() { return _value; },
         set value(newValue) {
             // @ts-ignore
-            _value = typeof newValue === 'function' ? newValue(_value) : newValue;
-            subscribers.forEach(fn => fn(_value));
+            const nextValue = typeof newValue === 'function' ? newValue(_value) : newValue;
+            if (nextValue !== _value) {
+                _value = nextValue;
+                subscribers.forEach(fn => fn(_value));
+            }
         },
         subscribe: (subscriber) => {
             subscribers.add(subscriber);
+            subscriber(_value);
             return () => subscribers.delete(subscriber);
         }
     };
@@ -26,28 +42,18 @@ export function createSignal(initialValue) {
 /** @type {ReturnType<typeof createSignal<string>>} */
 export const themeSignal = createSignal('dark');
 
-// ==========================================
-// OPTIMIZACIÓN LEYENDA: Constructable Stylesheets (Síncrono)
-// ==========================================
-// @ts-ignore -> Le decimos a VSCode que ignore esta sintaxis exclusiva de Vite
-import globalCss from '/src/css/global.css?inline';
-
-/** @type {CSSStyleSheet} */
-const globalSheet = new CSSStyleSheet();
-globalSheet.replaceSync(globalCss); // ¡Carga instantánea en RAM, cero esperas de red!
-
-// ==========================================
-// DEFINICIÓN DE COMPONENTES Y SHADOW DOM
-// ==========================================
 /**
+ * @template T
  * @typedef {Object} ComponentConfig
- * @property {string} template
- * @property {(dom: ShadowRoot) => (void | (() => void))} [setup]
+ * @property {string} template - Native HTML with <slot> support.
+ * @property {Record<string, function(Event, HTMLElement): void>} [actions] - Auto-binder methods.
+ * @property {(dom: ShadowRoot) => (void | (() => void))} [setup] - Surgical DOM injection and logic.
  */
 
 /**
+ * Defines a memory-safe Sovereign Web Component.
  * @param {string} tagName
- * @param {(attbr: Record<string, string>) => ComponentConfig} componentFactory
+ * @param {(attrs: Record<string, string>) => ComponentConfig} componentFactory
  */
 export function defineComponent(tagName, componentFactory) {
     if (customElements.get(tagName)) return;
@@ -60,28 +66,48 @@ export function defineComponent(tagName, componentFactory) {
             this._cleanupFns = [];
         }
 
-        // Ya no somos asíncronos. La velocidad es máxima.
         connectedCallback() {
             /** @type {Record<string, string>} */
-            const attbr = {};
-            for (let attr of this.attributes) {
-                if (attr.name.startsWith('attbr-')) {
-                    attbr[attr.name.replace('attbr-', '')] = attr.value;
+            const attrs = {};
+            // 🛡️ BUCLE SELLADO CORRECTAMENTE
+            for (let attr of Array.from(this.attributes)) {
+                if (attr.name.startsWith('attrs-')) {
+                    attrs[attr.name.replace('attrs-', '')] = attr.value;
                 }
             }
 
-            const { template, setup } = componentFactory(attbr);
-            
-            if(this.shadowRoot) {
-                this.shadowRoot.innerHTML = template;
-                // Adoptamos la hoja maestra instantáneamente
-                this.shadowRoot.adoptedStyleSheets = [globalSheet];
-            }
+            const { template, actions, setup } = componentFactory(attrs);
 
-            if (setup && this.shadowRoot) {
-                const cleanup = setup(this.shadowRoot);
-                if (typeof cleanup === 'function') {
-                    this._cleanupFns.push(cleanup);
+            if (this.shadowRoot) {
+                this.shadowRoot.innerHTML = template;
+                this.shadowRoot.adoptedStyleSheets = [globalSheet];
+
+                // ⚡ SONARCH AUTO-BINDER
+                if (actions) { // 🛡️ IF SELLADO CORRECTAMENTE
+                    this.shadowRoot.querySelectorAll('*').forEach(el => {
+                        for (let attr of Array.from(el.attributes)) {
+                            if (attr.name.startsWith('@')) { 
+                                const eventName = attr.name.substring(1);
+                                const actionName = attr.value;
+
+                                if (typeof actions[actionName] === 'function') {
+                                    const boundAction = (e) => actions[actionName](e, /** @type {HTMLElement} */(el));
+                                    el.addEventListener(eventName, boundAction);
+                                    el.removeAttribute(attr.name); // 🛡️ TIPO CORREGIDO
+                                    this._cleanupFns.push(() => {
+                                        el.removeEventListener(eventName, boundAction);
+                                    });
+                                }
+                            }
+                        }
+                    });
+                }
+
+                if (setup && this.shadowRoot) {
+                    const cleanup = setup(this.shadowRoot);
+                    if (typeof cleanup === 'function') {
+                        this._cleanupFns.push(cleanup);
+                    }
                 }
             }
         }
