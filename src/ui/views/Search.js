@@ -1,10 +1,10 @@
 import { defineComponent } from '/src/core/engine.js';
 
-defineComponent('view-busqueda', (attbr) => {
+defineComponent('sn-search', (attrs) => {
     // Si la URL es /busqueda?q=Soberania&filtro=Activos
     // El router inyecta mágicamente attbr.q y attbr.filtro
-    const termino = attbr.q || 'Búsqueda vacía'; 
-    const filtro = attbr.filtro || 'Todos';
+    const termino = attrs.q || 'Búsqueda vacía';
+    const filtro = attrs.filtro || 'Todos';
 
     return {
         template: /*html*/`

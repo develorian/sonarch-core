@@ -1,9 +1,9 @@
 import { defineComponent } from '/src/core/engine.js';
 
-defineComponent('sonarch-app', () => {
+defineComponent('sn-dapp', () => {
     return {
         template: /*html*/`
-            <div class="sonarch-root-container">
+            <div class="sn-root-container">
                 <slot></slot> 
             </div>
         `,

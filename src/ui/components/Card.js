@@ -1,7 +1,7 @@
 import { defineComponent } from '/src/core/engine.js';
-import { conexiones } from '/src/ui/components/sonarch-btn.js';
+import { conex } from './Button.js';
 
-const iconosSvg = {
+const iconsSvg = {
     abeja: `
         <svg viewBox="0 0 200 200" width="100" height="100" class="drop-shadow-cyan">
             <g transform="translate(100, 100)">
@@ -42,38 +42,38 @@ const iconosSvg = {
         </svg>`
 };
 
-defineComponent('sonarch-card', (attbr) => {
-    const fecha = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
-    const esDinamica = attbr.tipo === 'dinamica';
-    const titulo = attbr.titulo || 'PULSO DEL ENJAMBRE';
-    const desc = attbr.desc || 'Nodos activos fortificando la red neuronal descentralizada. Presencia confirmada.';
-    const valorActual = esDinamica ? conexiones.value : (attbr.valor || '0');
+defineComponent('sn-card', (attrs) => {
+    const date = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+    const isDinamic = attrs.type === 'dinamica';
+    const title = attrs.title || 'PULSO DEL ENJAMBRE';
+    const desc = attrs.desc || 'Nodos activos fortificando la red neuronal descentralizada. Presencia confirmada.';
+    const currentVaule = isDinamic ? conex.value : (attrs.value || '0');
 
     // Seleccionamos el SVG correspondiente, por defecto la abeja
-    const svgEscogido = iconosSvg[attbr.icono] || iconosSvg.abeja;
+    const svgEscogido = iconsSvg[attrs.icon] || iconsSvg.abeja;
 
     return {
         template: /*html*/`
             <div class="gls-panel p-lg fx fx-col items-ctr txt-ctr hover-fx h-full" style="width: 100%;">
                 ${svgEscogido}
-                <h3 class="txt-md fw-bold tc-grad" style="margin-top: 1rem; text-transform: uppercase;">${titulo}</h3>
+                <h3 class="txt-md fw-bold tc-grad" style="margin-top: 1rem; text-transform: uppercase;">${title}</h3>
                 <p class="txt-sm tc-mut" style="margin-top: 0.5rem; margin-bottom: 1.5rem; flex: 1;">${desc}</p>
                 
                 <div class="fw-bold tc-main" style="font-size: 3.5rem; line-height: 1; text-shadow: 0 0 20px color-mix(in srgb, var(--color-cyan) 40%, transparent);">
-                    <span ${esDinamica ? 'id="nodo-display"' : ''}>${valorActual}</span>
+                    <span ${isDinamic ? 'id="nodo-display"' : ''}>${currentVaule}</span>
                 </div>
                 
                 <div class="txt-tn tc-mut" style="margin-top: 1.5rem; opacity: 0.7; letter-spacing: 0.1em; text-transform: uppercase;">
-                    ${fecha}
+                    ${date}
                 </div>
             </div>
         `,
         setup: (shadowDOM) => {
-            if (esDinamica) {
+            if (isDinamic) {
                 const display = shadowDOM.querySelector('#nodo-display');
                 if (display) {
-                    display.textContent = String(conexiones.value);
-                    return conexiones.subscribe(val => display.textContent = String(val));
+                    display.textContent = String(conex.value);
+                    return conex.subscribe(val => display.textContent = String(val));
                 }
             }
         }

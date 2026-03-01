@@ -1,7 +1,3 @@
-import { defineComponent } from '/src/core/engine.js'; // Ruta absoluta
-import '/src/ui/components/sonarch-btn.js';           // Ruta absoluta
-
-const svgLogo = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="180" height="180" class="drop-shadow-cyan" style="margin-bottom: 2rem;">
     <path d="M200 20 L60 220 L200 180 L340 220 Z" fill="#2b313d" />
     <path d="M200 180 L60 220 L200 360 L340 220 Z" fill="#1f242d" />
@@ -20,22 +16,4 @@ const svgLogo = `
     <circle cx="200" cy="310" r="30" fill="none" stroke="#00f2ff" stroke-width="5"/>
     <circle cx="200" cy="310" r="15" fill="none" stroke="#00f2ff" stroke-width="3"/>
     <circle cx="200" cy="310" r="5" fill="#00f2ff"/>
-</svg>`;
-
-defineComponent('view-home', () => {
-    return {
-        template: `
-            <div class="fx items-ctr just-ctr w-full anim-fade" style="height: 100%;">
-                <section class="fx fx-col items-ctr txt-ctr gap-lg" style="max-width: 600px; margin: 0 auto;">
-                    ${svgLogo}
-                    <h2 class="txt-xl fw-bold tc-main">LA WEB SOBERANA</h2>
-                    <p class="txt-md tc-mut">
-                        Construyendo sistemas resilientes, post-cuánticos y sin intermediarios. 
-                        El poder ha vuelto a los nodos.
-                    </p>
-                    <sonarch-btn attbr-text="CONECTAR AL ENJAMBRE"></sonarch-btn>
-                </section>
-            </div>
-        `
-    };
-});
+</svg>

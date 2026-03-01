@@ -28,17 +28,6 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-body {
-    background-color: var(--bg-base);
-    color: var(--text-main);
-    height: 100dvh; /* dvh exacto de la pantalla */
-    position: relative;
-    overflow: hidden; /* Bloquea el scroll global como una app nativa */
-    transition: background-color 0.4s ease, color 0.4s ease;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-}
-
 body::before {
     content: ''; position: fixed; inset: 0; z-index: -2;
     background-color: color-mix(in srgb, var(--text-main) 5%, transparent);
