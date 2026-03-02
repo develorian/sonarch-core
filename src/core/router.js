@@ -73,6 +73,6 @@ export class Router {
             }
         });
         this.resolve();
-        console.log('[SONARCH] ⚡ Router plugin ignited.');
+        console.log('>> [SONARCH ROUTER] ⚡ %cPLUGIN IGNITED.', 'color: rgb(208, 255, 0); font-weight: bold;');
     }
 }

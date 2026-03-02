@@ -7,7 +7,7 @@ import { DApp } from "/src/core/DApp.js";
 import { Router } from "/src/core/router.js";
 
 // UI COMPONENTS REGISTRATION: Side-effect imports (Registra los CustomElements)
-import "/src/ui/components/App.js"; // <- Nueva ruta implementada para validación de rutas Query.
+import "./App.js"; // <- Nueva ruta implementada para validación de rutas Query.
 import "/src/ui/components/Navbar.js";
 import "/src/ui/components/Button.js";
 import "/src/ui/components/Card.js";
@@ -29,7 +29,7 @@ const dapp = new DApp({ name: 'SONARCH Node', version: 'v0.2.0-alpha-MicroMotorJ
 
 // Instanciar el Router Plugin (Ajusta basePath si suber a GitHub Pages = 'sonarch-core')
 // ⚡ INTERRUPTOR INTELIGENTE: Vite lo cambia automáticamente.
-const currentBasePath = import.meta.env.DEV ? '' : '/sonarch-core/';
+const currentBasePath = import.meta.env.DEV ? '' : '/sonarch-core';
 
 // Instanciar el Router Plugin con la ruta dinámica
 const router = new Router({ basePath: currentBasePath });
@@ -58,7 +58,7 @@ router
     .add('/nodo/:id', (params) => {
         rootOutlet.innerHTML = `<sn-node attrs-id="${params.id}"></sn-node>`;
     })
-    .add('*', () => { // Fallback de seguridad (404)
+    .add('*', () => { // Fallback de seguridad (404) para GitHub Pages (deploy)
         rootOutlet.innerHTML = `<h2 style="color: red; text-align: center;">404 - Node Not Found</h2>`;
     });
 
@@ -68,4 +68,4 @@ dapp.use('router', router);
 dapp.mount('sn-dapp');
 
 // Mensaje de verificación
-console.log(">> [SONARCH CORE]: ✅ INICIADO CORRECTAMENTE");
+console.log(">> [SONARCH CORE]: ✅ %cINICIADO CORRECTAMENTE", 'color: rgb(208, 255, 0); font-weight: bold;');
