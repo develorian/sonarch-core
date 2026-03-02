@@ -1,0 +1,52 @@
+name: Deploy SONARCH to GitHub Pages
+
+# 1. ¿CUÁNDO SE ACTIVA?
+on:
+  push:
+    branches: ["main"] # Se activa cada vez que haces un 'git push' a la rama main
+  workflow_dispatch: # Te permite darle al botón de 'Play' manualmente desde GitHub
+
+# 2. PERMISOS DE SEGURIDAD
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 3. CONTROL DE TRÁFICO (Cancela despliegues viejos si haces dos push muy rápido)
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+# 4. LAS ÓRDENES AL SERVIDOR LINUX
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Clonar el código
+        uses: actions/checkout@v4
+      
+      - name: ⚙️ Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          
+      - name: 📦 Instalar dependencias
+        run: npm install
+        
+      - name: 🛠️ Compilar SONARCH Core
+        run: npm run build
+        
+      - name: ⚙️ Configurar GitHub Pages
+        uses: actions/configure-pages@v4
+        
+      - name: 📤 Subir el paquete (carpeta dist)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+          
+      - name: 🚀 Desplegar a Producción
+        id: deployment
+        uses: actions/deploy-pages@v4
