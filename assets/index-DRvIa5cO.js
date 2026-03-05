@@ -18,14 +18,15 @@
 })();
 class k {
   constructor(t = {}) {
-    this.name = t.name || "SONARCH Node", this.version = t.version || "v0.1.1-alpha-MicroMotorJS", this.plugins = /* @__PURE__ */ new Map(), this.globalState = /* @__PURE__ */ new Map(), console.log(`[SONARCH] \u2705 Engine initialized: ${this.name} (${this.version})`);
+    this.name = t.name || "SONARCH Node", this.version = t.version || "v0.1.1-alpha-MicroMotorJS", this.plugins = /* @__PURE__ */ new Map(), this.globalState = /* @__PURE__ */ new Map(), console.log(`>> [SONARCH ENGINE] \u2705 
+Engine initialized: %c${this.name}%c (${this.version})`, "color: rgb(34, 255, 0); font-weight: bold;", "color: hsl(74, 93%, 55%); font-weight: bold;");
   }
   use(t, r) {
     return this.plugins.set(t, r), this;
   }
   mount(t) {
     const r = document.querySelector(t);
-    if (!r) throw new Error(`[SONARCH] 404: Root element ${t} not found.`);
+    if (!r) throw new Error(`>> [SONARCH] 404: Root element ${t} not found.`);
     this.plugins.has("router") && this.plugins.get("router").ignite(r);
   }
 }
@@ -65,7 +66,7 @@ class E {
     window.addEventListener("popstate", () => this.resolve()), document.body.addEventListener("click", (t) => {
       const a = t.composedPath().find((e) => e.hasAttribute && e.hasAttribute("data-link"));
       a && (t.preventDefault(), this.navigate(a.getAttribute("href") || "/"));
-    }), this.resolve(), console.log("[SONARCH] \u26A1 Router plugin ignited.");
+    }), this.resolve(), console.log(">> [SONARCH ROUTER] \u26A1 %cPLUGIN IGNITED.", "color: rgb(208, 255, 0); font-weight: bold;");
   }
 }
 const L = `:host{display:block;width:100%;box-sizing:border-box}:root{--color-cyan: #00f2ff;--color-blue: #4facfe;--color-purple: #8b5cf6;--bg-base: #f8f9fa;--bg-surface: #ffffff;--text-main: #1e293b;--text-mut: #64748b;--grad-primary: linear-gradient(135deg, var(--color-purple), var(--color-blue));--sz-tn: clamp(.25rem, 1vw, .5rem);--sz-sm: clamp(.5rem, 2vw, .75rem);--sz-md: clamp(1rem, 3vw, 1.25rem);--sz-lg: clamp(1.5rem, 4vw, 2rem);--sz-xl: clamp(2rem, 5vw, 3rem);font-family:Inter,system-ui,sans-serif;color-scheme:light dark}[data-theme=dark]{--bg-base: #0a0a12;--bg-surface: #13161c;--text-main: #f0f4f8;--text-mut: #94a3b8;--grad-primary: linear-gradient(135deg, var(--color-blue), var(--color-cyan))}*,*:before,*:after{box-sizing:border-box;margin:0;padding:0}body:before{content:"";position:fixed;inset:0;z-index:-2;background-color:color-mix(in srgb,var(--text-main) 5%,transparent);mask-image:url("data:image/svg+xml,%3Csvg width='60' height='103.9' viewBox='0 0 60 103.9' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill-opacity='0' stroke='%23000' stroke-width='1'/%3E%3Cpath d='M30 103.9l25.98-15v-30L30 43.9l-25.98 15v30z' fill-opacity='0' stroke='%23000' stroke-width='1'/%3E%3C/svg%3E");mask-size:60px 103.9px;pointer-events:none}body{background-color:var(--bg-base);color:var(--text-main);min-height:100dvh;position:relative;overflow-x:hidden;overflow-y:auto;transition:background-color .4s ease,color .4s ease;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;scrollbar-width:none;-ms-overflow-style:none}body::-webkit-scrollbar{display:none}@keyframes pulse-network{0%{opacity:.5;transform:scale(1)}to{opacity:1;transform:scale(1.05)}}.fx{display:flex}.fx-col{flex-direction:column}.items-ctr{align-items:center}.just-ctr{justify-content:center}.just-btw{justify-content:space-between}.w-full{width:100%}.h-full{height:100%}.gap-tn{gap:var(--sz-tn)}.gap-sm{gap:var(--sz-sm)}.gap-md{gap:var(--sz-md)}.gap-lg{gap:var(--sz-lg)}.gap-xl{gap:var(--sz-xl)}.p-tn{padding:var(--sz-tn)}.p-sm{padding:var(--sz-sm)}.p-md{padding:var(--sz-md)}.p-lg{padding:var(--sz-lg)}.p-xl{padding:var(--sz-xl)}.txt-tn{font-size:clamp(.65rem,.8vw,.75rem)}.txt-sm{font-size:clamp(.75rem,1vw,.875rem)}.txt-md{font-size:clamp(.875rem,1vw + .5rem,1rem);text-wrap:pretty}.txt-lg{font-size:clamp(1.125rem,2vw + .5rem,1.25rem);text-wrap:balance}.txt-xl{font-size:clamp(2rem,5vw,4rem);text-wrap:balance;line-height:1.1;font-weight:800;letter-spacing:-.02em}.fw-bold{font-weight:700}.txt-ctr{text-align:center}.tc-main{color:var(--text-main)}.tc-mut{color:var(--text-mut)}.tc-grad{background:var(--grad-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.gls-panel{background:color-mix(in srgb,var(--bg-surface) 60%,transparent);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid color-mix(in srgb,var(--text-main) 10%,transparent);border-radius:var(--sz-md);box-shadow:0 8px 32px color-mix(in srgb,var(--text-main) 5%,transparent);transition:all .3s cubic-bezier(.16,1,.3,1)}.gls-panel.hover-fx:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--color-cyan) 30%,transparent);box-shadow:0 15px 40px color-mix(in srgb,var(--color-cyan) 10%,transparent)}.btn-core{background:var(--grad-primary);color:#fff;border:none;padding:var(--sz-sm) var(--sz-lg);border-radius:var(--sz-tn);font-weight:700;cursor:pointer;transition:all .2s ease}.btn-core:hover{transform:scale(1.02);filter:brightness(1.1);box-shadow:0 0 20px color-mix(in srgb,var(--color-cyan) 40%,transparent)}.btn-core:active{transform:scale(.98)}@keyframes fadeInSlide{0%{opacity:0;transform:translateY(20px);filter:blur(5px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}.anim-fade{animation:fadeInSlide .5s cubic-bezier(.16,1,.3,1) forwards}`, b = new CSSStyleSheet();
@@ -94,9 +95,9 @@ function i(s, t) {
         for (let c of Array.from(n.attributes)) if (c.name.startsWith("@")) {
           const l = c.name.substring(1), p = c.value;
           if (typeof e[p] == "function") {
-            const x = (w) => e[p](w, n);
-            n.addEventListener(l, x), n.removeAttribute(c.name), this._cleanupFns.push(() => {
-              n.removeEventListener(l, x);
+            const g = (w) => e[p](w, n);
+            n.addEventListener(l, g), n.removeAttribute(c.name), this._cleanupFns.push(() => {
+              n.removeEventListener(l, g);
             });
           }
         }
@@ -168,7 +169,7 @@ i("sn-btn", (s) => ({ template: `
     }, 400));
   }), o;
 } }));
-const g = { abeja: `
+const x = { abeja: `
         <svg viewBox="0 0 200 200" width="100" height="100" class="drop-shadow-cyan">
             <g transform="translate(100, 100)">
                 <polygon points="0,-40 34,-20 34,20 0,40 -34,20 -34,-20" fill="#1f242d" stroke="#00f2ff" stroke-width="2"/>
@@ -205,10 +206,10 @@ const g = { abeja: `
             </g>
         </svg>` };
 i("sn-card", (s) => {
-  const t = (/* @__PURE__ */ new Date()).toLocaleDateString("es-ES", { year: "numeric", month: "long", day: "numeric" }), r = s.type === "dinamica", a = s.title || "PULSO DEL ENJAMBRE", e = s.desc || "Nodos activos fortificando la red neuronal descentralizada. Presencia confirmada.", o = r ? d.value : s.value || "0";
+  const t = (/* @__PURE__ */ new Date()).toLocaleDateString("es-ES", { year: "numeric", month: "long", day: "numeric" }), r = !s.type, a = s.title || "PULSO DEL ENJAMBRE", e = s.desc || "Nodos activos fortificando la red neuronal descentralizada. Presencia confirmada.", o = r ? d.value : s.value;
   return { template: `
             <div class="gls-panel p-lg fx fx-col items-ctr txt-ctr hover-fx h-full" style="width: 100%;">
-                ${g[s.icon] || g.abeja}
+                ${x[s.icon] || x.abeja}
                 <h3 class="txt-md fw-bold tc-grad" style="margin-top: 1rem; text-transform: uppercase;">${a}</h3>
                 <p class="txt-sm tc-mut" style="margin-top: 0.5rem; margin-bottom: 1.5rem; flex: 1;">${e}</p>
                 
@@ -316,24 +317,22 @@ i("sn-swarm", () => ({ template: `
                         </p>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--sz-lg); width: 100%; align-items: stretch;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 3fr)); gap: var(--sz-lg); width: 100%; align-items: stretch;">
+                        <sn-card></sn-card>
                         <sn-card 
-                            attrs-type="dinamica" 
-                            attrs-icon="abeja">
-                        </sn-card>
-                        <sn-card 
-                            attrs-type="dinamica" 
+                            attrs-type="server" 
                             attrs-icon="servidor" 
                             attrs-title="NODO BETA (ARCH)" 
                             attrs-desc="Servidor de bases de datos. KVM2 Activo." 
                             attrs-value="UP">
                         </sn-card>
                         <sn-card 
-                            attrs-type="dinamica" 
+                            attrs-type="web" 
                             attrs-icon="red" 
                             attrs-title="LATENCIA DE RED" 
                             attrs-desc="Tiempo de respuesta P2P estimado." 
-                            attrs-value="12ms"></sn-card>
+                            attrs-value="12ms">
+                        </sn-card>
                     </div>
 
                     <div class="txt-ctr mt-4" style="margin-top: 1rem;">
@@ -397,7 +396,7 @@ i("sn-search", (s) => {
             </div>
         ` };
 });
-const v = new k({ name: "SONARCH Node", version: "v0.2.0-alpha-MicroMotorJS-NakedF-Stable" }), M = "/sonarch-core/", y = new E({ basePath: M }), f = document.querySelector("main") || document.querySelector("sn-dapp");
+const v = new k({ name: "SONARCH Node", version: "v0.2.0-alpha-MicroMotorJS-NakedF-Stable" }), M = "/sonarch-core", y = new E({ basePath: M }), f = document.querySelector("main") || document.querySelector("sn-dapp");
 y.add("/", () => {
   f.innerHTML = "<sn-home></sn-home>";
 }).add("/enjambre", () => {
@@ -417,4 +416,4 @@ y.add("/", () => {
 });
 v.use("router", y);
 v.mount("sn-dapp");
-console.log(">> [SONARCH CORE]: \u2705 INICIADO CORRECTAMENTE");
+console.log(">> [SONARCH CORE]: \u2705 %cINICIADO CORRECTAMENTE", "color: rgb(208, 255, 0); font-weight: bold;");
