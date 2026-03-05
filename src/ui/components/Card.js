@@ -44,10 +44,10 @@ const iconsSvg = {
 
 defineComponent('sn-card', (attrs) => {
     const date = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
-    const isDinamic = attrs.type === 'dinamica';
+    const isDinamic = !attrs.type;
     const title = attrs.title || 'PULSO DEL ENJAMBRE';
     const desc = attrs.desc || 'Nodos activos fortificando la red neuronal descentralizada. Presencia confirmada.';
-    const currentVaule = isDinamic ? conex.value : (attrs.value || '0');
+    const currentVaule = isDinamic ? conex.value : attrs.value;
 
     // Seleccionamos el SVG correspondiente, por defecto la abeja
     const svgEscogido = iconsSvg[attrs.icon] || iconsSvg.abeja;

@@ -15,7 +15,10 @@ export class DApp {
         this.plugins = new Map();
         this.globalState = new Map();
 
-        console.log(`[SONARCH] ✅ Engine initialized: ${this.name} (${this.version})`);
+        console.log(`>> [SONARCH ENGINE] ✅ \nEngine initialized: %c${this.name}%c (${this.version})`, 
+            'color: rgb(34, 255, 0); font-weight: bold;', 
+            'color: hsl(74, 93%, 55%); font-weight: bold;'
+        );
     }
 
     /**
@@ -35,7 +38,7 @@ export class DApp {
      */
     mount(selector) {
         const root = document.querySelector(selector);
-        if (!root) throw new Error(`[SONARCH] 404: Root element ${selector} not found.`);
+        if (!root) throw new Error(`>> [SONARCH] 404: Root element ${selector} not found.`);
 
         // If a router plugin exists, ignite it.
         if (this.plugins.has('router')) {

@@ -16,24 +16,22 @@ defineComponent('sn-swarm', () => {
                         </p>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--sz-lg); width: 100%; align-items: stretch;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 3fr)); gap: var(--sz-lg); width: 100%; align-items: stretch;">
+                        <sn-card></sn-card>
                         <sn-card 
-                            attrs-type="dinamica" 
-                            attrs-icon="abeja">
-                        </sn-card>
-                        <sn-card 
-                            attrs-type="dinamica" 
+                            attrs-type="server" 
                             attrs-icon="servidor" 
                             attrs-title="NODO BETA (ARCH)" 
                             attrs-desc="Servidor de bases de datos. KVM2 Activo." 
                             attrs-value="UP">
                         </sn-card>
                         <sn-card 
-                            attrs-type="dinamica" 
+                            attrs-type="web" 
                             attrs-icon="red" 
                             attrs-title="LATENCIA DE RED" 
                             attrs-desc="Tiempo de respuesta P2P estimado." 
-                            attrs-value="12ms"></sn-card>
+                            attrs-value="12ms">
+                        </sn-card>
                     </div>
 
                     <div class="txt-ctr mt-4" style="margin-top: 1rem;">
